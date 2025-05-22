@@ -28,15 +28,19 @@ Course* Node::ReturnCourse(){
 
 Node::Node(Course course){
     this->current = course;
+    this->left = nullptr;
+    this->right = nullptr;
 }
 
 BST::BST(){
     this->size = 0;
+    this->root = nullptr;
 }
 
 void BST::Insert(Course course){
     if(this->root == nullptr){
         Node* node = new Node(course);
+        this->root = node;
         this->size++;    
     }else{
         this->addNode(this->root, course);

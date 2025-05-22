@@ -9,6 +9,7 @@
 #define _READER_HPP_
 #include <string>
 #include <vector>
+#include "BST.hpp"
 
 
 // Function Declarations

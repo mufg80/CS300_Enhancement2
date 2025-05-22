@@ -13,6 +13,7 @@
 #include <vector>
 #include "ABCUApp.hpp"
 #include "BST.hpp"
+#include "BST.cpp"
 #include <iomanip>
 #include <limits>
 #include <algorithm>
@@ -25,7 +26,7 @@ int main(int argc, char* argv[]) {
     
     // Variable declarations
     std::string filePath;
-    BST structure;
+    BST tree;
     int input;
     bool isRead = false;
 
@@ -49,10 +50,10 @@ int main(int argc, char* argv[]) {
 
                 // Clear structures so that if case 1 is ran multiple times, it will not grow.
                 // Menu case to load file, as for file path.
-                filePath = getFilePath();
+                //filePath = getFilePath();
 
                 // Load file request, try to read file at users request.
-                isRead = readCourseFile(filePath, structure);
+                isRead = readCourseFile("CourseList.txt", tree);
 
                 
             break;
@@ -181,6 +182,8 @@ bool readCourseFile(std::string filepath, BST& tree){
         return false;
     }
 
+    tree.PrintOrdered();
+
     // Examine vectors for errors.
     // if(examineReadFile(tree)){
     //     // Vector of vectors is good, let user know file is loadedd into memory.
@@ -196,6 +199,7 @@ bool readCourseFile(std::string filepath, BST& tree){
     //     std::cout << std::endl;
     //    return false;
     // }
+    return true;
 }
 
 // Function to examine the vector of vectors validating correctness. Validation checked:

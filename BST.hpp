@@ -23,7 +23,7 @@ class Node{
         Node* right;
         Course current;
     public:
-    Node::Node(Course course);
+    Node(Course course);
     Course* ReturnCourse();
     Node* GetLeft();
     Node* GetRight();
@@ -39,16 +39,16 @@ class BST{
     private:
     int size;
     Node* root;
-    void BST::addNode(Node* node, Course course);
+    void addNode(Node* node, Course course);
     int compareNoCase(std::string first, std::string second);
-    void BST::InOrder(Node* node);
-    void BST::PrintCourse(Course course);
+    void InOrder(Node* node);
+    void PrintCourse(Course course);
     public:
-    BST::BST();
-    void BST::Insert(Course course);
-    void BST::PrintOrdered();
+    BST();
+    void Insert(Course course);
+    void PrintOrdered();
     
-    Course* BST::GetCourse(std::string courseNumber);
+    Course* GetCourse(std::string courseNumber);
 };
 
 
