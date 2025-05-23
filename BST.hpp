@@ -9,6 +9,7 @@
 #define _BST_HPP_
 #include <string>
 #include <vector>
+#include <memory>
 namespace BST{
     // Structure for courses
     struct Course{
@@ -21,8 +22,8 @@ namespace BST{
     class Node{
 
         private:
-            Node* left;
-            Node* right;
+            std::unique_ptr<Node>left;
+            std::unique_ptr<Node> right;
             Course current;
 
         public:
@@ -30,9 +31,8 @@ namespace BST{
             Course* ReturnCourse();
             Node* GetLeft();
             Node* GetRight();
-            void SetLeft(Node* node);
-            void SetRight(Node* node);
-
+            void SetLeft(std::unique_ptr<Node> node);
+            void SetRight(std::unique_ptr<Node> node);
     };
 
 
@@ -42,7 +42,7 @@ namespace BST{
 
         private:
             int size;
-            Node* root;
+            std::unique_ptr<Node> root;
             void addNode(Node* node, Course course);
             int compareNoCase(std::string first, std::string second);
             void inOrder(Node* node);
