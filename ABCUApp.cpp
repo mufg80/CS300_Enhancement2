@@ -13,11 +13,11 @@
 #include <vector>
 #include "ABCUApp.hpp"
 #include "BST.hpp"
-#include "BST.cpp"
 #include <iomanip>
 #include <limits>
 #include <algorithm>
 
+using namespace BST;
 // Main menu, access point of program. 
 int main(int argc, char* argv[]) {
 
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     
     // Variable declarations
     std::string filePath;
-    BST tree;
+    BinarySearchTree tree;
     int input;
     bool isRead = false;
 
@@ -53,7 +53,12 @@ int main(int argc, char* argv[]) {
                 //filePath = getFilePath();
 
                 // Load file request, try to read file at users request.
-                isRead = readCourseFile("CourseList.txt", tree);
+                isRead = readCourseFile("CourseList.txt", &tree);
+                if(isRead){
+                    std::cout << "Tree populated with courses." << std::endl;
+                }else{
+                    std::cout << "Tree failed to populate with courses." << std::endl;
+                }
 
                 
             break;
@@ -61,7 +66,7 @@ int main(int argc, char* argv[]) {
             {
                 // Print list of course names.
                
-               
+               tree.PrintOrdered();
             
             }
             break;
@@ -71,6 +76,7 @@ int main(int argc, char* argv[]) {
                 std::string userInput = getCourseRequest();
 
                 // Use name to print specific course and its prerequisites.
+                tree.PrintOneCourse(userInput);
 
             }
             break;
@@ -130,7 +136,7 @@ void outputMenuItems(){
 
 // Read courses function takes the path to file and a vector of vectors. This function reads course list from
 // hard drive and builds a vector of vectors. Calls helper function for checks on data.
-bool readCourseFile(std::string filepath, BST& tree){
+bool readCourseFile(std::string filepath, BinarySearchTree* tree){
 
     // Try catch to catch failures on stream and let user know of issue.
     try{
@@ -171,7 +177,7 @@ bool readCourseFile(std::string filepath, BST& tree){
         {
             c->prereqs.push_back(listOfPieces.at(i));
         }
-        tree.Insert(*c);
+        tree->Insert(*c);
         
         
     }
@@ -181,96 +187,8 @@ bool readCourseFile(std::string filepath, BST& tree){
         std::cerr << "            Error opening/reading file." << std::endl;
         return false;
     }
-
-    tree.PrintOrdered();
-
-    // Examine vectors for errors.
-    // if(examineReadFile(tree)){
-    //     // Vector of vectors is good, let user know file is loadedd into memory.
-    //     std::cout << std::endl;
-    //     std::cout << "            File loaded successfully." << std::endl;
-    //     std::cout << std::endl;
-    //     return true;
-       
-    // }else{
-    //     // Function reported error with file format, let user know file failed to load.
-    //     std::cout << std::endl;
-    //     std::cout << "            File not loaded." << std::endl;
-    //     std::cout << std::endl;
-    //    return false;
-    // }
+    
+    bool b = tree->ValidateCourses();
+    
     return true;
 }
-
-// Function to examine the vector of vectors validating correctness. Validation checked:
-// 1: Must have at least one line.
-// 2: First two columns must have data in each row.
-// 3: All prereqs must exist in column 0 as course ID in another row.
-// bool examineReadFile(BST& dataStructure){
-
-//     // Vector of strings created to hold all course ids in column zero of dataStructure.
-//     std::vector<std::string> courseNames;
-
-//     // Make sure we don't have an empty vector.
-//     if(dataStructure.size() == 0){
-//         std::cout << std::endl;
-//         std::cout << "            Error: No lines were read from file." << std::endl;
-//         std::cout << std::endl;
-//         return false;
-//     }
-
-//     // Start checks.
-//     for(int i = 0; i < dataStructure.size(); i++){
-//         // Check if line had at least two items.
-//         if(dataStructure.at(i).size() < 2){
-//             std::cout << std::endl;
-//             std::cout << "            Error: Line missing some fields, less than 2 existing." << std::endl;
-//             std::cout << std::endl;
-//             return false;
-//         }
-//         // Be sure that first two columns both have information.
-//         if((dataStructure.at(i).at(0).empty() || dataStructure.at(i).at(1).empty())){
-//             // Course information is invalid should have two fields minimum.
-//             std::cout << std::endl;
-//             std::cout << "            Error: A line from the file did not have both a name and Id." << std::endl;
-//             std::cout << std::endl;
-//             return false;
-//         }else{
-//             // If a line has id and name, load id into a list of string for prereqs later.
-//             if(!dataStructure.at(i).at(0).empty()){
-//                 // Copy index 0 of each row to compare prereqs against.
-//                 courseNames.push_back(dataStructure.at(i).at(0));
-//             }
-//         }
-//     }
-
-
-//     // Vector of vectors looks good, double check prereqs.
-//     for(std::vector<std::string> list : dataStructure){
-//         // Skip lists with no prereqs.
-//         if(list.size() > 2){
-
-//             // Start at index 2, after id and name, check each prereq.
-//             for(int i = 2; i < list.size(); i++){
-//                 // Set found bit to false.
-//                 bool found = false;
-//                 // Check against all ids in list.
-//                 for(std::string name : courseNames){
-//                     if(name.compare(list.at(i)) == 0){
-//                         // Prereq found, mark found.
-//                         found = true;
-//                     }
-//                 }
-//                 // Prereq not found in ids, let user know and return false.
-//                 if(!found){
-//                     std::cout << std::endl;
-//                     std::cout << "            Error: Prereq " << list.at(i) << " not found as course name in file." << std::endl;
-//                     std::cout << std::endl;
-//                     return false;
-//                 }
-//             }
-//         }
-
-//     }
-//     return true;
-// }

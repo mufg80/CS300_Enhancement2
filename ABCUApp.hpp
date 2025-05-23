@@ -5,12 +5,12 @@
 // Copyright   : 
 // Description : Header file containing file reading declarations for ABCU app
 //============================================================================
-#ifndef _READER_HPP_
-#define _READER_HPP_
+#ifndef _ABCUApp_HPP_
+#define _ABCUApp_HPP_
 #include <string>
 #include <vector>
 #include "BST.hpp"
-
+using namespace BST;
 
 // Function Declarations
 
@@ -24,9 +24,9 @@ std::string getCourseRequest();
 void outputMenuItems();
 
 // Reads filepath and creates a vector of vectors.
-bool readCourseFile(std::string filepath, BST& dataStructure);
+bool readCourseFile(std::string filepath, BinarySearchTree* dataStructure);
 
 // Checks data structure for validation rules.
 //bool examineReadFile(BST& BuildDataStructure);
 
-#endif /*!_READER_HPP_*/
+#endif /*!_ABCUApp_HPP_*/
