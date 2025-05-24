@@ -15,16 +15,32 @@ using namespace BST;
 // Function Declarations
 
 // Gets file path string from user.
-std::string getFilePath();
+std::string GetFilePath();
+
+void GetUserInt(int &input);
+
+void DeleteCaseFour(BST::BinarySearchTree &tree);
+
+void BuildTreeCaseOne(BST::BinarySearchTree &tree);
+
+void PrintOrderedCaseTwo(BST::BinarySearchTree &tree);
+
+void PrintCourseCaseThree(BST::BinarySearchTree &tree);
+
+void InsertCourseCaseFive(BST::BinarySearchTree &tree);
 
 // Function that gets courses id from user.
-std::string getCourseRequest();
+void GetUserString(std::string message, std::string *input);
+
+void GetUserList(std::string message, std::vector<std::string> *inputList);
+
+void BufferCheck();
 
 // Menu output.
-void outputMenuItems();
+void OutputMenuItems();
 
 // Reads filepath and creates a vector of vectors.
-bool readCourseFile(std::string filepath, BinarySearchTree* dataStructure);
+bool ReadCourseFile(std::string filepath, BinarySearchTree* dataStructure);
 
 // Checks data structure for validation rules.
 //bool examineReadFile(BST& BuildDataStructure);

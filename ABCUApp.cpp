@@ -28,69 +28,53 @@ int main(int argc, char* argv[]) {
     std::string filePath;
     BinarySearchTree tree;
     int input;
-    bool isRead = false;
+    Course newcourse;
 
     // Endless loop to cycle program until terminated.
     while(true){
         // Show menu to user and get user input.
-        outputMenuItems();
-        std::cin >> input;
-
-        // Check input to make sure user entered integer. If not throw it out 
-        // and assign as default a 5, which will trigger the default case in switch statement.
-        if(!std::cin.good()){
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            input = 5;
-        }
+        OutputMenuItems();
+        GetUserInt(input);
 
         // Start switch case.
         switch(input){
             case 1:
 
-                // Clear structures so that if case 1 is ran multiple times, it will not grow.
-                // Menu case to load file, as for file path.
-                //filePath = getFilePath();
+                BuildTreeCaseOne(tree);
 
-                // Load file request, try to read file at users request.
-                isRead = readCourseFile("CourseList.txt", &tree);
-                if(isRead){
-                    std::cout << "Tree populated with courses." << std::endl;
-                }else{
-                    std::cout << "Tree failed to populate with courses." << std::endl;
-                }
-
-                
-            break;
+                break;
             case 2:
             {
-                // Print list of course names.
-               
-               tree.PrintOrdered();
-            
+                PrintOrderedCaseTwo(tree);
             }
             break;
             case 3:
             {
-                // Get specified course from user.
-                std::string userInput = getCourseRequest();
-
-                // Use name to print specific course and its prerequisites.
-                tree.PrintOneCourse(userInput);
-
+                PrintCourseCaseThree(tree);
             }
             break;
             case 4:
 
+                DeleteCaseFour(tree);
+
+                break;
+            case 5:
+
+                InsertCourseCaseFive(tree);
+
+                break;
+            case 6:
+
                 // Menu Item for terminating program, say good bye and IF condition below will terminate loop.
                 std::cout << "            Good bye!" << std::endl;
-                break;
+                
             break;
             default:
                 // Default case, User specified non existing menu item. Let them know.
                 std::cout << "            This is not an appropriate entry. Please try again." << std::endl;
+            break;
         }
-        if(input == 4){
+        if(input == 6){
             break;
         }
 
@@ -98,8 +82,145 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+void InsertCourseCaseFive(BST::BinarySearchTree &tree)
+{
+    // Get specified course from user.
+    std::string message = "What is course ID?";
+    std::string userinput = "";
+    Course newcourse;
+    GetUserString(message, &userinput);
+    newcourse.courseId = userinput;
+
+    message = "What is course name?";
+    userinput = "";
+    GetUserString(message, &userinput);
+    newcourse.courseName = userinput;
+
+    
+    message = "What is course prereqs? They must be ID's separated by commas (,) and must exist.";
+    std::vector<std::string> inputList;
+
+    GetUserList(message, &inputList);
+    newcourse.prereqs = inputList;
+    // Menu Item for adding course
+
+    bool validated = tree.ValidateSingleCourse(newcourse);
+    if(validated){
+        bool b = tree.Insert(newcourse);
+        if(b){
+            std::cout << "Inserted." << std::endl;
+        }else{
+            std::cout << "Unable to insert. Please try again." << std::endl;
+        }
+    }else{
+        std::cout << "Unable to insert. Please try again." << std::endl;
+    }
+    
+}
+
+
+// Function to request the name of the course the user is interested in.
+void GetUserString(std::string message, std::string *input){
+    std::cout << "            " << message << std::endl;
+    std::getline(std::cin, *input);
+    BufferCheck();
+}
+
+// Function to request the name of the course the user is interested in.
+void GetUserList(std::string message, std::vector<std::string> *inputList){
+    std::cout << "            " << message << std::endl;
+    std::string req;
+    std::getline(std::cin, req);
+
+    std::istringstream iss(req);
+    std::string prereq;
+    while (std::getline(iss, prereq, ',')) {
+        inputList->push_back(prereq);
+    }
+    BufferCheck();
+}
+
+void GetUserInt(int &input)
+{
+    std::string strInput;
+    std::getline(std::cin, strInput);
+
+    try
+    {
+        input = std::stoi(strInput);
+    }
+    catch(const std::exception& e)
+    {
+        input = 10;
+    }
+    BufferCheck();
+}
+
+void BufferCheck(){
+    if (!std::cin.good())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+
+
+void PrintCourseCaseThree(BST::BinarySearchTree &tree)
+{
+    std::string message = "Which course (by ID) would you like to know about?";
+    std::string userinput = "";
+    // Get specified course from user.
+    GetUserString(message, &userinput);
+
+    // Use name to print specific course and its prerequisites.
+    tree.PrintOneCourse(userinput);
+}
+
+void PrintOrderedCaseTwo(BST::BinarySearchTree &tree)
+{
+    // Print list of course names.
+
+    tree.PrintOrdered();
+}
+
+void BuildTreeCaseOne(BST::BinarySearchTree &tree)
+{
+    // Clear structures so that if case 1 is ran multiple times, it will not grow.
+    // Menu case to load file, as for file path.
+    // filePath = getFilePath();
+
+    // Load file request, try to read file at users request.
+    bool isRead = ReadCourseFile("CourseList.txt", &tree);
+    if (isRead)
+    {
+        std::cout << "Tree populated with courses." << std::endl;
+    }
+    else
+    {
+        std::cout << "Tree failed to populate with courses." << std::endl;
+        tree.Clear();
+    }
+}
+
+void DeleteCaseFour(BST::BinarySearchTree &tree)
+{
+    std::string message = "Which course (by ID) would you like to delete?";
+    std::string userinput = "";
+    // Get specified course from user.
+    GetUserString(message, &userinput);
+    // Menu Item for Deleting course by ID
+    bool b = tree.RemoveCoursewithId(userinput);
+    if(b){
+        std::cout << "Course Deleted." << std::endl;
+    }else{
+        std::cout << "Course not found." << std::endl;
+    }
+}
+
+
+
 // A function to get file name from user.
-std::string getFilePath(){
+std::string GetFilePath(){
     
     std::cout << "            Enter the file name for the courses list." << std::endl;
     std::string input;
@@ -108,17 +229,9 @@ std::string getFilePath(){
     return input;
 }
 
-// Function to request the name of the course the user is interested in.
-std::string getCourseRequest(){
-    std::cout << "            Which course do you want to know about?  " << std::endl;
-    std::string input;
-    std::cin >> input;
-    return input;
-}
-
 
 // Function for outputting menu to user.
-void outputMenuItems(){
+void OutputMenuItems(){
     std::cout << "-----------------------------------------------------------" << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
     std::cout << std::endl;
@@ -127,7 +240,9 @@ void outputMenuItems(){
     std::cout << "               1) Load Data Structure            " << std::endl;
     std::cout << "               2) Print Course List              " << std::endl;
     std::cout << "               3) Print Course                   " << std::endl;
-    std::cout << "               4) Exit                           " << std::endl;
+    std::cout << "               4) Delete Course                   " << std::endl;
+    std::cout << "               5) Add Course                   " << std::endl;
+    std::cout << "               6) Exit                           " << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
@@ -136,7 +251,7 @@ void outputMenuItems(){
 
 // Read courses function takes the path to file and a vector of vectors. This function reads course list from
 // hard drive and builds a vector of vectors. Calls helper function for checks on data.
-bool readCourseFile(std::string filepath, BinarySearchTree* tree){
+bool ReadCourseFile(std::string filepath, BinarySearchTree* tree){
 
     // Try catch to catch failures on stream and let user know of issue.
     try{
@@ -190,5 +305,5 @@ bool readCourseFile(std::string filepath, BinarySearchTree* tree){
     
     bool b = tree->ValidateCourses();
     
-    return true;
+    return b;
 }

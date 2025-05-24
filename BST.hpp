@@ -31,8 +31,12 @@ namespace BST{
             Course* ReturnCourse();
             Node* GetLeft();
             Node* GetRight();
+            std::unique_ptr<Node> MoveLeft();
+            std::unique_ptr<Node> MoveRight();
             void SetLeft(std::unique_ptr<Node> node);
             void SetRight(std::unique_ptr<Node> node);
+            void ResetLeft();
+            void ResetRight();
     };
 
 
@@ -49,15 +53,22 @@ namespace BST{
             void printCourse(Course course);
             void findCourse(Node* node, std::string id, Course& empty);
             void getListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node* node);
-            void checkPrereqs(Node* node, bool* b, std::vector<std::tuple<std::string, std::string>> *list);
+            void checkPrereqsRecursively(Node* node, bool* b, std::vector<std::tuple<std::string, std::string>> *list);
+            bool validateNameDesciption(Course course);
+            bool checkPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &names);
+            void recursiveClear(Node* node);
         public:
             BinarySearchTree();
-            void Insert(Course course);
+            bool Insert(Course course);
             void PrintOrdered();
             void FindCourse(std::string id, Course& empty);
             bool ValidateCourses();
             void PrintOneCourse(std::string id);
+            bool RemoveCoursewithId(std::string id);
+            bool ValidateSingleCourse(Course course);
+            void Clear();
+           
     };
 
 }
-#endif /*_BST_HPP_*/
+#endif /* _BST_HPP_ */
