@@ -57,10 +57,11 @@ namespace BST{
             bool validateNameDesciption(Course course);
             bool checkPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &names);
             bool isCourseIdUnique(Course course);
-            void findCoursesInvalidRecursively(std::vector<std::string>* courseIDs, Course course);
+            void findCoursesInvalidRecursively(Node* node, std::vector<Course>* courseIDs, Course course);
             void recursiveClear(Node* node);
         public:
             BinarySearchTree();
+            int GetSize();
             bool Insert(Course course);
             void PrintOrdered();
             void FindCourse(std::string id, Course& empty);

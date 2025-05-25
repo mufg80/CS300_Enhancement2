@@ -71,6 +71,11 @@ namespace BST
         // root is automatically nullptr
     }
 
+    int BinarySearchTree::GetSize()
+    {
+        return this->size;
+    }
+
     // Function compares strings after converting them to lowercase, for case-insensitive comparisons.
     int BinarySearchTree::compareNoCase(std::string first, std::string second)
     {
@@ -205,21 +210,55 @@ namespace BST
 
      std::vector<std::string> BinarySearchTree::FindCoursesInvalidOnDelete(std::string coursetodelete)
     {
-        std::vector<std::string> removeList;
-
+       
+        std::vector<Course> removeList;
+        std::vector<std::string> removeListStr;
+        if(this->size == 0){
+            return removeListStr;
+        }
         Course c;
         FindCourse(coursetodelete, c);
-        if(c.courseId.size() >0){
-            removeList.push_back(c.courseId);
-        }
+        if(c.courseId.size() > 0){
+            removeList.push_back(c);
+        }else return removeListStr;
 
+        int needDeleted = removeList.size();
+        int deleted = 0;
+        while(needDeleted > deleted){
+            findCoursesInvalidRecursively(this->root.get(), &removeList, removeList.at(deleted));
+            deleted++;
+            needDeleted = removeList.size();
+        }
+        for (size_t i = 0; i < removeList.size(); i++)
+        {
+            removeListStr.push_back(removeList.at(i).courseId);
+        }
+        return removeListStr;
         
         
     }
 
     
-    void BinarySearchTree::findCoursesInvalidRecursively(std::vector<std::string> *courseIDs, Course course)
+    void BinarySearchTree::findCoursesInvalidRecursively(Node* node, std::vector<Course> *courseIDs, Course course)
     {
+        if (node->GetLeft() != nullptr)
+        {
+            this->findCoursesInvalidRecursively(node->GetLeft(), courseIDs, course);
+        }
+
+        Course* c = node->ReturnCourse();
+        for (size_t i = 0; i < c->prereqs.size(); i++)
+        {
+            if(compareNoCase(c->prereqs.at(i), course.courseId) == 0){
+                courseIDs->push_back(*c);
+            }
+        }
+        
+        
+        if (node->GetRight() != nullptr)
+        {
+           this->findCoursesInvalidRecursively(node->GetRight(), courseIDs, course);
+        }
     }
 
     bool BinarySearchTree::ValidateCourses()

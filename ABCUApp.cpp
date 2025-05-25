@@ -23,12 +23,9 @@ int main(int argc, char* argv[]) {
 
     // Greeting
     std::cout << "         Welcome to ABCU Course App         " << std::endl;
-    
-    // Variable declarations
-    std::string filePath;
+        
     BinarySearchTree tree;
     int input;
-    Course newcourse;
 
     // Endless loop to cycle program until terminated.
     while(true){
@@ -39,35 +36,23 @@ int main(int argc, char* argv[]) {
         // Start switch case.
         switch(input){
             case 1:
-
                 BuildTreeCaseOne(tree);
-
                 break;
             case 2:
-            {
                 PrintOrderedCaseTwo(tree);
-            }
             break;
             case 3:
-            {
                 PrintCourseCaseThree(tree);
-            }
             break;
             case 4:
-
                 DeleteCaseFour(tree);
-
-                break;
+            break;
             case 5:
-
                 InsertCourseCaseFive(tree);
-
-                break;
+            break;
             case 6:
-
                 // Menu Item for terminating program, say good bye and IF condition below will terminate loop.
-                std::cout << "            Good bye!" << std::endl;
-                
+                std::cout << "            Good bye!" << std::endl;                
             break;
             default:
                 // Default case, User specified non existing menu item. Let them know.
@@ -77,9 +62,96 @@ int main(int argc, char* argv[]) {
         if(input == 6){
             break;
         }
-
     }
     return 0;
+}
+
+
+void BuildTreeCaseOne(BST::BinarySearchTree &tree)
+{
+    // Clear structures so that if case 1 is ran multiple times, it will not grow.
+    // Menu case to load file, as for file path.
+    // filePath = getFilePath();
+
+    // Load file request, try to read file at users request.
+    bool isRead = ReadCourseFile("CourseList.txt", &tree);
+    if (isRead)
+    {
+        std::cout << "Tree populated with courses." << std::endl;
+    }
+    else
+    {
+        std::cout << "Tree failed to populate with courses." << std::endl;
+        tree.Clear();
+    }
+}
+
+
+void PrintOrderedCaseTwo(BST::BinarySearchTree &tree)
+{
+    // Print list of course names.
+
+    if(tree.GetSize() == 0){
+        std::cout << "No courses found." << std::endl;
+    }else{
+        tree.PrintOrdered();
+    }
+    
+}
+
+void PrintCourseCaseThree(BST::BinarySearchTree &tree)
+{
+    std::string message = "Which course (by ID) would you like to know about?";
+    std::string userinput = "";
+    // Get specified course from user.
+    GetUserString(message, &userinput);
+
+    // Use name to print specific course and its prerequisites.
+    tree.PrintOneCourse(userinput);
+}
+
+void DeleteCaseFour(BST::BinarySearchTree &tree)
+{
+    std::string message = "Which course (by ID) would you like to delete?";
+    std::string userinput = "";
+    // Get specified course from user.
+    GetUserString(message, &userinput);
+    std::vector<std::string> coursesAffected;
+    coursesAffected = tree.FindCoursesInvalidOnDelete(userinput);
+
+    if(coursesAffected.size() > 0){
+
+        std::cout << "Courses to be deleted: ";
+        for (size_t i = 0; i < coursesAffected.size(); i++)
+        {
+            if(i == 0){
+                std::cout << " " << coursesAffected.at(i) << std::endl;
+            }else{
+                std::cout << "                        " << coursesAffected.at(i) << std::endl;
+            }
+        
+        }
+        message = "Confirm deletion? Type 1 to delete or 2 to cancel";
+        userinput = "";
+        GetUserString(message, &userinput);
+        if(userinput.compare("1") == 0){
+            for (size_t i = 0; i < coursesAffected.size(); i++)
+            {
+                bool b = tree.RemoveCoursewithId(coursesAffected.at(i));
+                if(b){
+                        std::cout << coursesAffected.at(i) << " Deleted." << std::endl;
+                }else{
+                        std::cout << coursesAffected.at(i) << " not Deleted." << std::endl;
+                }
+            }
+        }
+
+    }else{
+        std::cout << "No courses found." << std::endl;
+    }
+
+    
+   
 }
 
 void InsertCourseCaseFive(BST::BinarySearchTree &tree)
@@ -117,7 +189,6 @@ void InsertCourseCaseFive(BST::BinarySearchTree &tree)
     }
     
 }
-
 
 // Function to request the name of the course the user is interested in.
 void GetUserString(std::string message, std::string *input){
@@ -164,61 +235,6 @@ void BufferCheck(){
     }
 }
 
-
-void PrintCourseCaseThree(BST::BinarySearchTree &tree)
-{
-    std::string message = "Which course (by ID) would you like to know about?";
-    std::string userinput = "";
-    // Get specified course from user.
-    GetUserString(message, &userinput);
-
-    // Use name to print specific course and its prerequisites.
-    tree.PrintOneCourse(userinput);
-}
-
-void PrintOrderedCaseTwo(BST::BinarySearchTree &tree)
-{
-    // Print list of course names.
-
-    tree.PrintOrdered();
-}
-
-void BuildTreeCaseOne(BST::BinarySearchTree &tree)
-{
-    // Clear structures so that if case 1 is ran multiple times, it will not grow.
-    // Menu case to load file, as for file path.
-    // filePath = getFilePath();
-
-    // Load file request, try to read file at users request.
-    bool isRead = ReadCourseFile("CourseList.txt", &tree);
-    if (isRead)
-    {
-        std::cout << "Tree populated with courses." << std::endl;
-    }
-    else
-    {
-        std::cout << "Tree failed to populate with courses." << std::endl;
-        tree.Clear();
-    }
-}
-
-void DeleteCaseFour(BST::BinarySearchTree &tree)
-{
-    std::string message = "Which course (by ID) would you like to delete?";
-    std::string userinput = "";
-    // Get specified course from user.
-    GetUserString(message, &userinput);
-    // Menu Item for Deleting course by ID
-    bool b = tree.RemoveCoursewithId(userinput);
-    if(b){
-        std::cout << "Course Deleted." << std::endl;
-    }else{
-        std::cout << "Course not found." << std::endl;
-    }
-}
-
-
-
 // A function to get file name from user.
 std::string GetFilePath(){
     
@@ -228,7 +244,6 @@ std::string GetFilePath(){
     std::cout << std::endl;
     return input;
 }
-
 
 // Function for outputting menu to user.
 void OutputMenuItems(){
