@@ -82,6 +82,10 @@ namespace BST
 
     bool BinarySearchTree::Insert(Course course)
     {
+        bool b = this->isCourseIdUnique(course);
+        if(!b){
+            return false;
+        }
         if (this->root == nullptr)
         {
             this->root = std::make_unique<Node>(course);
@@ -181,6 +185,8 @@ namespace BST
         }
     }
 
+   
+
     void BinarySearchTree::findCourse(Node *node, std::string id, Course &empty)
     {
         if (compareNoCase(node->ReturnCourse()->courseId, id) == 0)
@@ -195,6 +201,25 @@ namespace BST
         {
             findCourse(node->GetRight(), id, empty);
         }
+    }
+
+     std::vector<std::string> BinarySearchTree::FindCoursesInvalidOnDelete(std::string coursetodelete)
+    {
+        std::vector<std::string> removeList;
+
+        Course c;
+        FindCourse(coursetodelete, c);
+        if(c.courseId.size() >0){
+            removeList.push_back(c.courseId);
+        }
+
+        
+        
+    }
+
+    
+    void BinarySearchTree::findCoursesInvalidRecursively(std::vector<std::string> *courseIDs, Course course)
+    {
     }
 
     bool BinarySearchTree::ValidateCourses()
@@ -472,6 +497,31 @@ namespace BST
         }
         return true;
     }
+
+    bool BinarySearchTree::isCourseIdUnique(Course course)
+    {
+        std::vector<std::tuple<std::string, std::string>> list;
+
+        if(this->root == nullptr){
+            return true;
+        }
+        getListOfCourseNames(&list, this->root.get());
+
+        if(list.size() < 1){
+            return true;
+        }
+        bool isUnique = true;
+        for (size_t i = 0; i < list.size(); i++)
+        {
+            auto[x,y] = list.at(i);
+            if(compareNoCase(x, course.courseId) == 0){
+                isUnique = false;
+                break;
+            }
+        }
+        return isUnique;
+    }
+
 
     void BinarySearchTree::recursiveClear(Node* node)
     {

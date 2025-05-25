@@ -292,7 +292,12 @@ bool ReadCourseFile(std::string filepath, BinarySearchTree* tree){
         {
             c->prereqs.push_back(listOfPieces.at(i));
         }
-        tree->Insert(*c);
+
+        
+        bool b = tree->Insert(*c);
+        if(!b){
+            std::cout << "Not inserted: " << c->courseId << std::endl;
+        }
         
         
     }
