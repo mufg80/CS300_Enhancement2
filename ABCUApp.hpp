@@ -2,39 +2,77 @@
 // Name        : ABCUApp.hpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
-// Copyright   : 
-// Description : Header file containing declarations for ABCU app
+// Copyright   : None
+// Description : Header file for the ABCU application, containing declarations
+//               for functions to manage a Binary Search Tree (BST) of courses,
+//               handle user input, and process course data from a file.
 //============================================================================
-#ifndef _ABCUApp_HPP_
-#define _ABCUApp_HPP_
+
+#ifndef ABCUApp_HPP_
+#define ABCUApp_HPP_
+
 #include <string>
 #include <vector>
 #include "BST.hpp"
-using namespace BST;
 
+
+// Retrieves the file path for the course data file from user input or default settings.
+// Returns: A string containing the file path.
 std::string GetFilePath();
 
-void GetUserInt(int &input);
+// Prompts the user for an integer input and stores it in the provided reference.
+// Parameters:
+//   input - Reference to an integer where the user's input will be stored.
+void GetUserInt(int &userInput);
 
-void BuildTreeCaseOne(BST::BinarySearchTree &tree);
+// Builds a Binary Search Tree by reading course data from a file (Case 1).
+// Parameters:
+//   tree - Reference to the BinarySearchTree to populate with course data.
+void BuildTreeCaseOne(BST::BinarySearchTree &courseTree);
 
-void PrintOrderedCaseTwo(BST::BinarySearchTree &tree);
+// Prints the courses in the Binary Search Tree in ordered traversal (Case 2).
+// Parameters:
+//   tree - Reference to the BinarySearchTree containing course data.
+void PrintOrderedCaseTwo(BST::BinarySearchTree &courseTree);
 
-void PrintCourseCaseThree(BST::BinarySearchTree &tree);
+// Prints details of a specific course from the Binary Search Tree (Case 3).
+// Parameters:
+//   tree - Reference to the BinarySearchTree containing course data.
+void PrintCourseCaseThree(BST::BinarySearchTree &courseTree);
 
-void DeleteCaseFour(BST::BinarySearchTree &tree);
+// Deletes a course from the Binary Search Tree (Case 4).
+// Parameters:
+//   tree - Reference to the BinarySearchTree containing course data.
+void DeleteCaseFour(BST::BinarySearchTree &courseTree);
 
-void InsertCourseCaseFive(BST::BinarySearchTree &tree);
+// Inserts a new course into the Binary Search Tree (Case 5).
+// Parameters:
+//   tree - Reference to the BinarySearchTree to insert the course into.
+void InsertCourseCaseFive(BST::BinarySearchTree &courseTree);
 
-void GetUserString(std::string message, std::string *input);
+// Prompts the user for a string input and stores it in the provided pointer.
+// Parameters:
+//   message - The prompt message displayed to the user.
+//   input   - Pointer to a string where the user's input will be stored.
+void GetUserString(std::string message, std::string *userInput);
 
+// Prompts the user for a list of strings and stores them in the provided vector.
+// Parameters:
+//   message   - The prompt message displayed to the user.
+//   inputList - Pointer to a vector of strings to store the user's input.
 void GetUserList(std::string message, std::vector<std::string> *inputList);
 
+// Clears the input buffer to prevent input errors from residual data.
 void BufferCheck();
 
+// Displays the menu options for the ABCU application.
 void OutputMenuItems();
 
-bool ReadCourseFile(std::string filepath, BinarySearchTree* dataStructure);
+// Reads course data from a file and populates the Binary Search Tree.
+// Parameters:
+//   filepath      - The path to the file containing course data.
+//   dataStructure - Pointer to the BinarySearchTree to store the course data.
+// Returns: True if the file was successfully read and the tree was populated, false otherwise.
+bool ReadCourseFile(std::string filepath, BST::BinarySearchTree* courseTree);
 
-
-#endif /*!_ABCUApp_HPP_*/
+#endif // !ABCUApp_HPP_
