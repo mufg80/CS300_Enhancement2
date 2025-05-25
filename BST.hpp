@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : Reader.hpp
+// Name        : BST.hpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
 // Copyright   : 
-// Description : Header file containing file reading declarations for ABCU app
+// Description : Header file containing BST Info for ABCU app
 //============================================================================
 #ifndef _BST_HPP_
 #define _BST_HPP_
@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 namespace BST{
+    
     // Structure for courses
     struct Course{
         std::string courseId;
