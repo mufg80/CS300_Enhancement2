@@ -38,27 +38,11 @@ void PrintCoursesInOrder(BST::BinarySearchTree &courseTree);
 //   tree - Reference to the BinarySearchTree containing course data.
 void PrintOneCourse(BST::BinarySearchTree &courseTree);
 
-// Deletes a course from the Binary Search Tree (Case 4).
-// Parameters:
-//   tree - Reference to the BinarySearchTree containing course data.
-void DeleteCourseFromTree(BST::BinarySearchTree &courseTree);
-
-// Inserts a new course into the Binary Search Tree (Case 5).
-// Parameters:
-//   tree - Reference to the BinarySearchTree to insert the course into.
-void InsertCaseToTree(BST::BinarySearchTree &courseTree);
-
 // Prompts the user for a string input and stores it in the provided pointer.
 // Parameters:
 //   message - The prompt message displayed to the user.
 //   input   - Pointer to a string where the user's input will be stored.
 void GetUserString(std::string message, std::string *userInput);
-
-// Prompts the user for a list of strings and stores them in the provided vector.
-// Parameters:
-//   message   - The prompt message displayed to the user.
-//   inputList - Pointer to a vector of strings to store the user's input.
-void GetUserList(std::string message, std::vector<std::string> *inputList);
 
 // Clears the input buffer to prevent input errors from residual data.
 void BufferCheck();

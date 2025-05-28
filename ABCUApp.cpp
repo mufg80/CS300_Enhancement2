@@ -55,20 +55,14 @@ int main(int argc, char* argv[]) {
                 break;
             case 3:
                 PrintOneCourse(tree); // Print details of a specific course.
-                break;
+                break;           
             case 4:
-                DeleteCourseFromTree(tree); // Delete a specified course.
-                break;
-            case 5:
-                InsertCaseToTree(tree); // Add a new course to the BST.
-                break;
-            case 6:
                 Rebalance(tree);
                 break;
-            case 7:
+            case 5:
                 PrintThreeTiers(tree);
                 break;
-            case 8:
+            case 6:
                 // Exit option: Display goodbye message and exit loop.
                 std::cout << "            Good bye!" << std::endl;                
                 break;
@@ -77,7 +71,7 @@ int main(int argc, char* argv[]) {
                 std::cout << "            This is not an appropriate entry. Please try again." << std::endl;
                 break;
         }
-        if(input == 8) {
+        if(input == 6) {
             break; // Terminate loop when user selects exit.
         }
     }
@@ -88,9 +82,6 @@ int main(int argc, char* argv[]) {
 // Parameters:
 //   tree - Reference to the BinarySearchTree to populate with course data.
 void BuildStructureFromFile(BST::BinarySearchTree &tree) {
-
-    // Clear the tree to prevent duplicate entries if case 1 is ran multiple times.
-    tree.Clear();
 
     // Attempt to read course data from the default file "CourseList.txt".
     bool isRead = ReadCourseFile("CourseList.txt", &tree);
@@ -111,6 +102,9 @@ void PrintCoursesInOrder(BST::BinarySearchTree &tree) {
         std::cout << "No courses found." << std::endl;
     } else {
         tree.PrintOrdered(); // Print courses in sorted order.
+        std::cout << "" << std::endl;
+        std::cout << "Courses: " << tree.GetSize() << std::endl;
+         std::cout << "" << std::endl;
     }
 }
 
@@ -126,94 +120,6 @@ void PrintOneCourse(BST::BinarySearchTree &tree) {
     tree.PrintOneCourse(userinput);
 }
 
-// Deletes a specified course from the Binary Search Tree (Case 4).
-// Parameters:
-//   tree - Reference to the BinarySearchTree containing course data.
-void DeleteCourseFromTree(BST::BinarySearchTree &tree) {
-    if(tree.GetSize() == 0){
-        std::cout << "        Tree Empty." << std::endl;
-        return;
-    }
-    std::string message = "Which course (by ID) would you like to delete?";
-    std::string userinput;
-
-    // Prompt user for course ID to delete
-    GetUserString(message, &userinput);
-    std::vector<std::string> coursesAffected = tree.FindCoursesInvalidOnDelete(userinput);
-
-    // Remove duplicate strings from vec.
-    std::sort(coursesAffected.begin(), coursesAffected.end());
-    coursesAffected.erase(std::unique(coursesAffected.begin(), coursesAffected.end()), coursesAffected.end());
-
-    if(coursesAffected.size() > 0) {
-        // Display courses that will be affected by the deletion.
-        std::cout << "Courses to be deleted: ";
-        for (size_t i = 0; i < coursesAffected.size(); i++) {
-            if(i == 0) {
-                std::cout << " " << coursesAffected.at(i) << std::endl;
-            } else {
-                std::cout << "                        " << coursesAffected.at(i) << std::endl;
-            }
-        }
-
-        // Confirm deletion with user.
-        message = "Confirm deletion? Type 1 to delete or 2 to cancel";
-        userinput.clear();
-        GetUserString(message, &userinput);
-        if(userinput == "1") {
-            // Delete each affected course
-            for (size_t i = 0; i < coursesAffected.size(); i++) {
-                bool success = tree.RemoveCourseWithId(coursesAffected.at(i));
-                if(success) {
-                    std::cout << coursesAffected.at(i) << " Deleted." << std::endl;
-                } else {
-                    std::cout << coursesAffected.at(i) << " not Deleted." << std::endl;
-                }
-            }
-        }
-    } else {
-        std::cout << "No courses found." << std::endl;
-    }
-}
-
-// Inserts a new course into the Binary Search Tree based on user input (Case 5).
-// Parameters:
-//   tree - Reference to the BinarySearchTree to insert the course into.
-void InsertCaseToTree(BST::BinarySearchTree &tree) {
-    std::string message;
-    std::string userinput;
-    Course newcourse;
-
-    // Prompt for course ID.
-    message = "What is course ID?";
-    GetUserString(message, &userinput);
-    newcourse.courseId = userinput;
-
-    // Prompt for course name.
-    message = "What is course name?";
-    GetUserString(message, &userinput);
-    newcourse.courseName = userinput;
-
-    // Prompt for prerequisites.
-    message = "What is course prereqs? They must be ID's separated by commas (,) and must exist.";
-    std::vector<std::string> inputList;
-    GetUserList(message, &inputList);
-    newcourse.prereqs = inputList;
-
-    // Validate and insert the new course.
-    bool validated = tree.ValidateSingleCourse(newcourse);
-    if(validated) {
-        bool success = tree.Insert(newcourse);
-        if(success) {
-            std::cout << "Inserted." << std::endl;
-        } else {
-            std::cout << "Unable to insert. Please try again." << std::endl;
-        }
-    } else {
-        std::cout << "Unable to insert. Please try again." << std::endl;
-    }
-}
-
 // Prompts the user for a string input and stores it in the provided pointer.
 // Parameters:
 //   message - The prompt message displayed to the user.
@@ -222,24 +128,6 @@ void GetUserString(std::string message, std::string *input) {
     std::cout << "            " << message << std::endl;
     std::getline(std::cin, *input);
     BufferCheck(); // Clear input buffer to prevent errors
-}
-
-// Prompts the user for a comma-separated list of strings and stores them in a vector.
-// Parameters:
-//   message   - The prompt message displayed to the user.
-//   inputList - Pointer to a vector of strings to store the user's input.
-void GetUserList(std::string message, std::vector<std::string> *inputList) {
-    std::cout << "            " << message << std::endl;
-    std::string req;
-    std::getline(std::cin, req);
-
-    // Parse input string by commas.
-    std::istringstream iss(req);
-    std::string prereq;
-    while (std::getline(iss, prereq, ',')) {
-        inputList->push_back(prereq);
-    }
-    BufferCheck(); // Clear input buffer to prevent errors.
 }
 
 // Prompts the user for an integer input and stores it in the provided reference.
@@ -285,11 +173,9 @@ void OutputMenuItems() {
     std::cout << "               1) Load Data Structure            " << std::endl;
     std::cout << "               2) Print Course List              " << std::endl;
     std::cout << "               3) Print Course                   " << std::endl;
-    std::cout << "               4) Delete Course                   " << std::endl;
-    std::cout << "               5) Add Course                   " << std::endl;
-    std::cout << "               6) Rebalance Tree                   " << std::endl;
-    std::cout << "               7) Print Tiers                   " << std::endl;
-    std::cout << "               8) Exit                           " << std::endl;
+    std::cout << "               4) Rebalance Tree                   " << std::endl;
+    std::cout << "               5) Print Tiers                   " << std::endl;
+    std::cout << "               6) Exit                           " << std::endl;
     std::cout << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
@@ -321,6 +207,12 @@ bool ReadCourseFile(std::string filepath, BinarySearchTree* tree) {
             return false;
         }
 
+        // Get next 100 courses
+        
+        int starting = tree->GetSize();
+        int index = 0;
+        int ending = starting + 100;
+
         // Read file line by line.
         while(getline(readfile, line)) {
             std::istringstream linestream(line);
@@ -332,22 +224,27 @@ bool ReadCourseFile(std::string filepath, BinarySearchTree* tree) {
                 listOfPieces.push_back(piece);
             }
 
-            // Create a new Course object from parsed data.
-            Course* c = new Course();
-            if(listOfPieces.size() > 1) {
-                c->courseId = listOfPieces.at(0);
-                c->courseName = listOfPieces.at(1);
-            }
-            for (size_t i = 2; i < listOfPieces.size(); i++) {
-                c->prereqs.push_back(listOfPieces.at(i));
-            }
+            if(index >= starting && index < ending){
+                // Create a new Course object from parsed data.
+                Course* c = new Course();
+                if(listOfPieces.size() > 1) {
+                    c->courseId = listOfPieces.at(0);
+                   c->courseName = listOfPieces.at(1);
+                }
+                for (size_t i = 2; i < listOfPieces.size(); i++) {
+                   c->prereqs.push_back(listOfPieces.at(i));
+                }
 
-            // Insert course into the tree.
-            bool success = tree->Insert(*c);
-            if(!success) {
-                std::cout << "Not inserted: " << c->courseId << std::endl;
+                // Insert course into the tree.
+                bool success = tree->Insert(*c);
+                if(!success) {
+                    std::cout << "Not inserted: " << c->courseId << std::endl;
+                }
+                 delete c; // Free allocated memory.
             }
-            delete c; // Free allocated memory.
+           
+           
+            index++;
         }
     } catch(std::ifstream::failure& e) {
         // Handle file reading errors.

@@ -233,43 +233,6 @@ namespace BST {
         }
     }
 
-    // Finds courses that would become invalid if a specified course is deleted.
-    // Parameters:
-    //   coursetodelete - The ID of the course to be deleted.
-    // Returns: A vector of course IDs that would be affected by the deletion.
-    std::vector<std::string> BinarySearchTree::FindCoursesInvalidOnDelete(std::string coursetodelete) {
-        std::vector<Course> removeList;
-        std::vector<std::string> removeListStr;
-
-        if (this->size == 0) {
-            return removeListStr; // Empty tree, return empty list.
-        }
-
-        // Find the course to delete.
-        Course c;
-        FindCourse(coursetodelete, c);
-        if (c.courseId.size() > 0) {
-            removeList.push_back(c);
-        } else {
-            return removeListStr; // Course not found, return empty list.
-        }
-
-        // Recursively find all courses that depend on the deleted course.
-        int needDeleted = removeList.size();
-        int deleted = 0;
-        while (needDeleted > deleted) {
-            FindCoursesInvalidRecursively(this->root.get(), &removeList, removeList.at(deleted));
-            deleted++;
-            needDeleted = removeList.size();
-        }
-
-        // Convert course objects to their IDs.
-        for (size_t i = 0; i < removeList.size(); i++) {
-            removeListStr.push_back(removeList.at(i).courseId);
-        }
-        return removeListStr;
-    }
-
     // Recursively finds courses that would become invalid due to a course deletion.
     // Parameters:
     //   node      - Pointer to the current node in the recursive traversal.
@@ -336,7 +299,12 @@ namespace BST {
         }
         std::vector<std::string> prereqs = node->ReturnCourse()->prereqs;
         if (!prereqs.empty()) {
-            *b = this->CheckPrereqsOneCourse(*node->ReturnCourse(), *list) && *b;
+            bool badCourse = this->CheckPrereqsOneCourse(*node->ReturnCourse(), *list);
+            if(!badCourse){
+                std::cout << "Bad Course: " << node->ReturnCourse()->courseId << std::endl;
+                *b = badCourse;
+            }
+
         }
         if (node->GetRight() != nullptr) {
             this->CheckPrereqsRecursively(node->GetRight(), b, list);
@@ -354,125 +322,6 @@ namespace BST {
         } else {
             std::cout << "Course not found." << std::endl;
         }
-    }
-
-    // Removes a course from the tree by ID.
-    // Parameters:
-    //   id - The course ID to remove.
-    // Returns: True if the course was removed, false if not found.
-    bool BinarySearchTree::RemoveCourseWithId(std::string id) {
-        Node *parent = nullptr;
-        Node *nodeToDelete = this->root.get();
-        if (nodeToDelete == nullptr) {
-            return false; 
-        }
-
-        // Special case: Removing the root node.
-        if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) == 0) {
-            if (nodeToDelete->GetLeft() == nullptr && nodeToDelete->GetRight() == nullptr) {
-                this->root.reset();
-                this->size--;
-                return true;
-            } else if (nodeToDelete->GetLeft() == nullptr) {
-                this->root = this->root->MoveRight();
-                this->size--;
-                return true;
-            } else if (nodeToDelete->GetRight() == nullptr) {
-                this->root = this->root->MoveLeft();
-                this->size--;
-                return true;
-            } else {
-                Node *parent = nullptr;
-                Node *successor = this->root->GetRight();
-                while (successor->GetLeft() != nullptr) {
-                    parent = successor;
-                    successor = successor->GetLeft();
-                }
-                *this->root->ReturnCourse() = *successor->ReturnCourse();
-                if (parent == nullptr) {
-                    this->root->ResetRight();
-                } else {
-                    parent->ResetLeft();
-                }
-                this->size--;
-                return true;
-            }
-        }
-
-        // Find the node to delete and its parent.
-        while (nodeToDelete) {
-            if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) > 0) {
-                parent = nodeToDelete;
-                nodeToDelete = nodeToDelete->GetLeft();
-            } else if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) < 0) {
-                parent = nodeToDelete;
-                nodeToDelete = nodeToDelete->GetRight();
-            } else {
-                break;
-            }
-        }
-        if (!nodeToDelete) {
-            return false; 
-        }
-
-        // Determine if nodeToDelete is parent's left or right child.
-        bool isLeftChild = parent && CompareNoCase(nodeToDelete->ReturnCourse()->courseId, parent->ReturnCourse()->courseId) < 0;
-
-        // Case 1: No children
-        if (nodeToDelete->GetLeft() == nullptr && nodeToDelete->GetRight() == nullptr) {
-            if (isLeftChild) {
-                parent->ResetLeft();
-            } else if (parent) {
-                parent->ResetRight();
-            }
-            this->size--;
-            return true;
-        }
-        // Case 2: No left child.
-        else if (nodeToDelete->GetLeft() == nullptr) {
-            if (isLeftChild) {
-                parent->SetLeft(std::move(nodeToDelete->MoveRight()));
-            } else if (parent) {
-                parent->SetRight(std::move(nodeToDelete->MoveRight()));
-            }
-            this->size--;
-            return true;
-        }
-        // Case 3: No right child.
-        else if (nodeToDelete->GetRight() == nullptr) {
-            if (isLeftChild) {
-                parent->SetLeft(std::move(nodeToDelete->MoveLeft()));
-            } else if (parent) {
-                parent->SetRight(std::move(nodeToDelete->MoveLeft()));
-            }
-            this->size--;
-            return true;
-        }
-        // Case 4: Two children.
-        else {
-            Node *succParent = nullptr;
-            Node *successor = nodeToDelete->GetRight();
-            while (successor->GetLeft() != nullptr) {
-                succParent = successor;
-                successor = successor->GetLeft();
-            }
-            *nodeToDelete->ReturnCourse() = *successor->ReturnCourse();
-            if (succParent == nullptr) {
-                nodeToDelete->ResetRight();
-            } else {
-                succParent->ResetLeft();
-            }
-            this->size--;
-            return true;
-        }
-    }
-
-    // Validates a single course, checking its ID, name, and prerequisites.
-    // Parameters:
-    //   course - The Course object to validate.
-    // Returns: True if the course is valid, false otherwise.
-    bool BinarySearchTree::ValidateSingleCourse(Course course) {
-        return ValidateNameDescription(course);
     }
 
     // Prints top 3 tiers of tree for visualization of BST's balance.
