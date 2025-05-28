@@ -9,8 +9,7 @@
 //               course data, including sorting and validating courses by prerequisites.
 //============================================================================
 
-#ifndef _BST_HPP_
-#define _BST_HPP_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -84,75 +83,79 @@ namespace BST {
         // Parameters:
         //   node   - Pointer to the current node in the recursive traversal.
         //   course - The Course object to insert.
-        void addNode(Node* node, Course course);
+        void AddNode(Node* node, Course course);
 
         // Performs case-insensitive string comparison.
         // Parameters:
         //   first  - First string to compare.
         //   second - Second string to compare.
         // Returns: Integer indicating comparison result (<0 if first < second, 0 if equal, >0 if first > second).
-        int compareNoCase(std::string first, std::string second);
+        int CompareNoCase(std::string first, std::string second);
 
         // Recursively prints courses in-order (sorted by course ID).
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
-        void inOrder(Node* node);
+        void InOrder(Node* node);
+
+        void ListInOrder(Node*node, std::vector<Course>* courses);
 
         // Prints details of a single course.
         // Parameters:
         //   course - The Course object to print.
-        void printCourse(Course course);
+        void PrintCourse(Course course);
 
         // Recursively searches for a course by ID and stores it in the provided reference.
         // Parameters:
         //   node  - Pointer to the current node in the recursive traversal.
         //   id    - The course ID to search for.
         //   empty - Reference to a Course object to store the found course.
-        void findCourse(Node* node, std::string courseId, Course& empty);
+        void FindCourse(Node* node, std::string courseId, Course& empty);
 
         // Recursively collects course IDs and names into a list.
         // Parameters:
         //   list - Pointer to a vector of tuples containing course IDs and names.
         //   node - Pointer to the current node in the recursive traversal.
-        void getListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node* node);
+        void GetListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node* node);
 
         // Recursively checks prerequisites for all courses.
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
         //   isGood - Pointer to a boolean indicating if all prerequisites are valid.
         //   list - Pointer to a vector of tuples containing course IDs and names.
-        void checkPrereqsRecursively(Node* node, bool* isGood, std::vector<std::tuple<std::string, std::string>> *list);
+        void CheckPrereqsRecursively(Node* node, bool* isGood, std::vector<std::tuple<std::string, std::string>> *list);
 
         // Validates the name and description of a course.
         // Parameters:
         //   course - The Course object to validate.
         // Returns: True if the course name and description are valid, false otherwise.
-        bool validateNameDesciption(Course course);
+        bool ValidateNameDescription(Course course);
 
         // Checks if a course's prerequisites exist in the tree.
         // Parameters:
         //   course - Reference to the Course object to validate.
         //   names  - Reference to a vector of tuples containing course IDs and names.
         // Returns: True if all prerequisites exist, false otherwise.
-        bool checkPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &list);
+        bool CheckPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &list);
 
         // Checks if a course ID is unique in the tree.
         // Parameters:
         //   course - The Course object to check.
         // Returns: True if the course ID is unique, false if it already exists.
-        bool isCourseIdUnique(Course course);
+        bool IsCourseIdUnique(Course course);
 
         // Recursively finds courses that would become invalid if a given course is deleted.
         // Parameters:
         //   node      - Pointer to the current node in the recursive traversal.
         //   courseIDs - Pointer to a vector to store IDs of affected courses.
         //   course    - The Course object to be deleted.
-        void findCoursesInvalidRecursively(Node* node, std::vector<Course>* coursesList, Course course);
+        void FindCoursesInvalidRecursively(Node* node, std::vector<Course>* coursesList, Course course);
 
         // Recursively clears all nodes in the tree.
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
-        void recursiveClear(Node* node);
+        void RecursiveClear(Node* node);
+
+        std::unique_ptr<Node> BuildBalancedTree(const std::vector<Course>& courses, size_t start, size_t end);
 
     public:
         // Constructor: Initializes an empty Binary Search Tree.
@@ -195,7 +198,7 @@ namespace BST {
         // Parameters:
         //   id - The course ID to remove.
         // Returns: True if the course was removed, false if not found.
-        bool RemoveCoursewithId(std::string courseId);
+        bool RemoveCourseWithId(std::string courseId);
 
         // Validates a single course, checking its ID, name, and prerequisites.
         // Parameters:
@@ -203,10 +206,19 @@ namespace BST {
         // Returns: True if the course is valid, false otherwise.
         bool ValidateSingleCourse(Course course);
 
+        // Prints 3 levels of tree for informational purposes.
+        // Parameters: None
+        // Returns: None
+        void PrintTopThreeLevelsOfTree();
+
+        // Rebalances tree by copying to a vector and then clearing tree. So that
+        // it can be rebuilt from scratch.
+        // Parameters: None
+        // Returns: void
+        void RebalanceTree();
+
         // Clears all courses from the tree.
         void Clear();
     };
 
 } // namespace BST
-
-#endif // !_BST_HPP_

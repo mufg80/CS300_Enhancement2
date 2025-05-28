@@ -7,9 +7,7 @@
 //               for functions to manage a Binary Search Tree (BST) of courses,
 //               handle user input, and process course data from a file.
 //============================================================================
-
-#ifndef ABCUApp_HPP_
-#define ABCUApp_HPP_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -28,27 +26,27 @@ void GetUserInt(int &userInput);
 // Builds a Binary Search Tree by reading course data from a file (Case 1).
 // Parameters:
 //   tree - Reference to the BinarySearchTree to populate with course data.
-void BuildTreeCaseOne(BST::BinarySearchTree &courseTree);
+void BuildStructureFromFile(BST::BinarySearchTree &courseTree);
 
 // Prints the courses in the Binary Search Tree in ordered traversal (Case 2).
 // Parameters:
 //   tree - Reference to the BinarySearchTree containing course data.
-void PrintOrderedCaseTwo(BST::BinarySearchTree &courseTree);
+void PrintCoursesInOrder(BST::BinarySearchTree &courseTree);
 
 // Prints details of a specific course from the Binary Search Tree (Case 3).
 // Parameters:
 //   tree - Reference to the BinarySearchTree containing course data.
-void PrintCourseCaseThree(BST::BinarySearchTree &courseTree);
+void PrintOneCourse(BST::BinarySearchTree &courseTree);
 
 // Deletes a course from the Binary Search Tree (Case 4).
 // Parameters:
 //   tree - Reference to the BinarySearchTree containing course data.
-void DeleteCaseFour(BST::BinarySearchTree &courseTree);
+void DeleteCourseFromTree(BST::BinarySearchTree &courseTree);
 
 // Inserts a new course into the Binary Search Tree (Case 5).
 // Parameters:
 //   tree - Reference to the BinarySearchTree to insert the course into.
-void InsertCourseCaseFive(BST::BinarySearchTree &courseTree);
+void InsertCaseToTree(BST::BinarySearchTree &courseTree);
 
 // Prompts the user for a string input and stores it in the provided pointer.
 // Parameters:
@@ -75,4 +73,10 @@ void OutputMenuItems();
 // Returns: True if the file was successfully read and the tree was populated, false otherwise.
 bool ReadCourseFile(std::string filepath, BST::BinarySearchTree* courseTree);
 
-#endif // !ABCUApp_HPP_
+// Calls function to rebalance BST if not empty.
+// Passes tree to method.
+void Rebalance(BST::BinarySearchTree &courseTree);
+
+// Calls function to print visually 3 tiers of tree.
+// Passes tree to method.
+void PrintThreeTiers(BST::BinarySearchTree &courseTree);

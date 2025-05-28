@@ -96,7 +96,7 @@ namespace BST {
     //   first  - First string to compare.
     //   second - Second string to compare.
     // Returns: Integer (<0 if first < second, 0 if equal, >0 if first > second).
-    int BinarySearchTree::compareNoCase(std::string first, std::string second) {
+    int BinarySearchTree::CompareNoCase(std::string first, std::string second) {
         std::transform(first.begin(), first.end(), first.begin(), ::tolower);
         std::transform(second.begin(), second.end(), second.begin(), ::tolower);
         return first.compare(second);
@@ -108,7 +108,7 @@ namespace BST {
     // Returns: True if insertion is successful, false if the course ID already exists or insertion fails.
     bool BinarySearchTree::Insert(Course course) {
         // Check if course ID is unique
-        if (!this->isCourseIdUnique(course)) {
+        if (!this->IsCourseIdUnique(course)) {
             return false;
         }
 
@@ -121,7 +121,7 @@ namespace BST {
 
         // Otherwise, recursively add the node.
         int oldSize = this->size;
-        this->addNode(this->root.get(), course);
+        this->AddNode(this->root.get(), course);
         return this->size > oldSize; // Return true if size increased.
     }
 
@@ -129,17 +129,17 @@ namespace BST {
     // Parameters:
     //   node   - Pointer to the current node in the recursive traversal.
     //   course - The Course object to insert.
-    void BinarySearchTree::addNode(Node *node, Course course) {
+    void BinarySearchTree::AddNode(Node *node, Course course) {
         if (!node) return; // Defensive check, should not occur in normal usage.
 
         Course *c = node->ReturnCourse();
         // Insert to left if course ID is less than current node's ID.
-        if (this->compareNoCase(c->courseId, course.courseId) > 0) {
+        if (this->CompareNoCase(c->courseId, course.courseId) > 0) {
             if (node->GetLeft() == nullptr) {
                 node->SetLeft(std::make_unique<Node>(course));
                 this->size++;
             } else {
-                addNode(node->GetLeft(), course);
+                AddNode(node->GetLeft(), course);
             }
         }
         // Insert to right if course ID is greater than or equal to current node's ID.
@@ -148,7 +148,7 @@ namespace BST {
                 node->SetRight(std::make_unique<Node>(course));
                 this->size++;
             } else {
-                addNode(node->GetRight(), course);
+                AddNode(node->GetRight(), course);
             }
         }
     }
@@ -156,27 +156,41 @@ namespace BST {
     // Prints all courses in the tree in sorted order (in-order traversal).
     void BinarySearchTree::PrintOrdered() {
         if (this->root != nullptr) {
-            this->inOrder(this->root.get());
+            this->InOrder(this->root.get());
         }
     }
 
     // Recursively performs in-order traversal to print courses.
     // Parameters:
     //   node - Pointer to the current node in the recursive traversal.
-    void BinarySearchTree::inOrder(Node *node) {
+    void BinarySearchTree::InOrder(Node *node) {
         if (node->GetLeft() != nullptr) {
-            this->inOrder(node->GetLeft());
+            this->InOrder(node->GetLeft());
         }
-        this->printCourse(*node->ReturnCourse());
+        this->PrintCourse(*node->ReturnCourse());
         if (node->GetRight() != nullptr) {
-            this->inOrder(node->GetRight());
+            this->InOrder(node->GetRight());
+        }
+    }
+
+    // Recursive function to traverse tree in order and build up a vector.
+    // Used by tree rebalancing function to get list of courses in order.
+    void BinarySearchTree::ListInOrder(Node *node, std::vector<Course>* courses)
+    {
+        if (node->GetLeft() != nullptr) {
+            this->ListInOrder(node->GetLeft(), courses);
+        }
+        courses->push_back(*node->ReturnCourse());
+
+        if (node->GetRight() != nullptr) {
+            this->ListInOrder(node->GetRight(), courses);
         }
     }
 
     // Prints details of a single course, including ID, name, and prerequisites.
     // Parameters:
     //   course - The Course object to print.
-    void BinarySearchTree::printCourse(Course course) {
+    void BinarySearchTree::PrintCourse(Course course) {
         std::cout << "------------------------------------------" << std::endl;
         std::cout << course.courseId << "    " << course.courseName << std::endl;
         std::cout << "Prereqs:   ";
@@ -198,7 +212,7 @@ namespace BST {
     //   empty - Reference to a Course object to store the found course.
     void BinarySearchTree::FindCourse(std::string id, Course &empty) {
         if (this->root != nullptr) {
-            findCourse(this->root.get(), id, empty);
+            FindCourse(this->root.get(), id, empty);
         }
     }
 
@@ -207,15 +221,15 @@ namespace BST {
     //   node  - Pointer to the current node in the recursive traversal.
     //   id    - The course ID to search for.
     //   empty - Reference to a Course object to store the found course.
-    void BinarySearchTree::findCourse(Node *node, std::string id, Course &empty) {
-        if (compareNoCase(node->ReturnCourse()->courseId, id) == 0) {
+    void BinarySearchTree::FindCourse(Node *node, std::string id, Course &empty) {
+        if (CompareNoCase(node->ReturnCourse()->courseId, id) == 0) {
             empty = *node->ReturnCourse();
         }
         if (node->GetLeft() != nullptr) {
-            findCourse(node->GetLeft(), id, empty);
+            FindCourse(node->GetLeft(), id, empty);
         }
         if (node->GetRight() != nullptr) {
-            findCourse(node->GetRight(), id, empty);
+            FindCourse(node->GetRight(), id, empty);
         }
     }
 
@@ -244,7 +258,7 @@ namespace BST {
         int needDeleted = removeList.size();
         int deleted = 0;
         while (needDeleted > deleted) {
-            findCoursesInvalidRecursively(this->root.get(), &removeList, removeList.at(deleted));
+            FindCoursesInvalidRecursively(this->root.get(), &removeList, removeList.at(deleted));
             deleted++;
             needDeleted = removeList.size();
         }
@@ -261,21 +275,21 @@ namespace BST {
     //   node      - Pointer to the current node in the recursive traversal.
     //   courseIDs - Pointer to a vector to store affected courses.
     //   course    - The Course object to be deleted.
-    void BinarySearchTree::findCoursesInvalidRecursively(Node *node, std::vector<Course> *courseIDs, Course course) {
+    void BinarySearchTree::FindCoursesInvalidRecursively(Node *node, std::vector<Course> *courseIDs, Course course) {
         if (node->GetLeft() != nullptr) {
-            this->findCoursesInvalidRecursively(node->GetLeft(), courseIDs, course);
+            this->FindCoursesInvalidRecursively(node->GetLeft(), courseIDs, course);
         }
 
         // Check if the current course has the deleted course as a prerequisite.
         Course *c = node->ReturnCourse();
         for (size_t i = 0; i < c->prereqs.size(); i++) {
-            if (compareNoCase(c->prereqs.at(i), course.courseId) == 0) {
+            if (CompareNoCase(c->prereqs.at(i), course.courseId) == 0) {
                 courseIDs->push_back(*c);
             }
         }
 
         if (node->GetRight() != nullptr) {
-            this->findCoursesInvalidRecursively(node->GetRight(), courseIDs, course);
+            this->FindCoursesInvalidRecursively(node->GetRight(), courseIDs, course);
         }
     }
 
@@ -283,7 +297,7 @@ namespace BST {
     // Returns: True if all courses are valid, false otherwise.
     bool BinarySearchTree::ValidateCourses() {
         std::vector<std::tuple<std::string, std::string>> list;
-        this->getListOfCourseNames(&list, this->root.get());
+        this->GetListOfCourseNames(&list, this->root.get());
 
         bool isGood = true;
         for (size_t i = 0; i < list.size(); i++) {
@@ -291,9 +305,9 @@ namespace BST {
             Course c;
             c.courseId = x;
             c.courseName = y;
-            isGood = validateNameDesciption(c) && isGood;
+            isGood = ValidateNameDescription(c) && isGood;
         }
-        this->checkPrereqsRecursively(this->root.get(), &isGood, &list);
+        this->CheckPrereqsRecursively(this->root.get(), &isGood, &list);
         return isGood;
     }
 
@@ -301,13 +315,13 @@ namespace BST {
     // Parameters:
     //   list - Pointer to a vector of tuples containing course IDs and names.
     //   node - Pointer to the current node in the recursive traversal.
-    void BinarySearchTree::getListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node *node) {
+    void BinarySearchTree::GetListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node *node) {
         if (node->GetLeft() != nullptr) {
-            this->getListOfCourseNames(list, node->GetLeft());
+            this->GetListOfCourseNames(list, node->GetLeft());
         }
         list->push_back(std::make_tuple(node->ReturnCourse()->courseId, node->ReturnCourse()->courseName));
         if (node->GetRight() != nullptr) {
-            this->getListOfCourseNames(list, node->GetRight());
+            this->GetListOfCourseNames(list, node->GetRight());
         }
     }
 
@@ -316,16 +330,16 @@ namespace BST {
     //   node - Pointer to the current node in the recursive traversal.
     //   b    - Pointer to a boolean indicating if all prerequisites are valid.
     //   list - Pointer to a vector of tuples containing course IDs and names.
-    void BinarySearchTree::checkPrereqsRecursively(Node *node, bool *b, std::vector<std::tuple<std::string, std::string>> *list) {
+    void BinarySearchTree::CheckPrereqsRecursively(Node *node, bool *b, std::vector<std::tuple<std::string, std::string>> *list) {
         if (node->GetLeft() != nullptr) {
-            this->checkPrereqsRecursively(node->GetLeft(), b, list);
+            this->CheckPrereqsRecursively(node->GetLeft(), b, list);
         }
         std::vector<std::string> prereqs = node->ReturnCourse()->prereqs;
         if (!prereqs.empty()) {
-            *b = this->checkPrereqsOneCourse(*node->ReturnCourse(), *list) && *b;
+            *b = this->CheckPrereqsOneCourse(*node->ReturnCourse(), *list) && *b;
         }
         if (node->GetRight() != nullptr) {
-            this->checkPrereqsRecursively(node->GetRight(), b, list);
+            this->CheckPrereqsRecursively(node->GetRight(), b, list);
         }
     }
 
@@ -336,7 +350,7 @@ namespace BST {
         Course course;
         this->FindCourse(id, course);
         if (!course.courseId.empty() && !course.courseName.empty()) {
-            this->printCourse(course);
+            this->PrintCourse(course);
         } else {
             std::cout << "Course not found." << std::endl;
         }
@@ -346,7 +360,7 @@ namespace BST {
     // Parameters:
     //   id - The course ID to remove.
     // Returns: True if the course was removed, false if not found.
-    bool BinarySearchTree::RemoveCoursewithId(std::string id) {
+    bool BinarySearchTree::RemoveCourseWithId(std::string id) {
         Node *parent = nullptr;
         Node *nodeToDelete = this->root.get();
         if (nodeToDelete == nullptr) {
@@ -354,7 +368,7 @@ namespace BST {
         }
 
         // Special case: Removing the root node.
-        if (compareNoCase(nodeToDelete->ReturnCourse()->courseId, id) == 0) {
+        if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) == 0) {
             if (nodeToDelete->GetLeft() == nullptr && nodeToDelete->GetRight() == nullptr) {
                 this->root.reset();
                 this->size--;
@@ -387,10 +401,10 @@ namespace BST {
 
         // Find the node to delete and its parent.
         while (nodeToDelete) {
-            if (compareNoCase(nodeToDelete->ReturnCourse()->courseId, id) > 0) {
+            if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) > 0) {
                 parent = nodeToDelete;
                 nodeToDelete = nodeToDelete->GetLeft();
-            } else if (compareNoCase(nodeToDelete->ReturnCourse()->courseId, id) < 0) {
+            } else if (CompareNoCase(nodeToDelete->ReturnCourse()->courseId, id) < 0) {
                 parent = nodeToDelete;
                 nodeToDelete = nodeToDelete->GetRight();
             } else {
@@ -402,7 +416,7 @@ namespace BST {
         }
 
         // Determine if nodeToDelete is parent's left or right child.
-        bool isLeftChild = parent && compareNoCase(nodeToDelete->ReturnCourse()->courseId, parent->ReturnCourse()->courseId) < 0;
+        bool isLeftChild = parent && CompareNoCase(nodeToDelete->ReturnCourse()->courseId, parent->ReturnCourse()->courseId) < 0;
 
         // Case 1: No children
         if (nodeToDelete->GetLeft() == nullptr && nodeToDelete->GetRight() == nullptr) {
@@ -458,7 +472,100 @@ namespace BST {
     //   course - The Course object to validate.
     // Returns: True if the course is valid, false otherwise.
     bool BinarySearchTree::ValidateSingleCourse(Course course) {
-        return validateNameDesciption(course);
+        return ValidateNameDescription(course);
+    }
+
+    // Prints top 3 tiers of tree for visualization of BST's balance.
+    void BinarySearchTree::PrintTopThreeLevelsOfTree()
+    {
+        std::string root = " NULL  ";
+        std::string left = " NULL  ";
+        std::string right = " NULL  ";
+        std::string leftLeft = " NULL  ";
+        std::string leftRight = " NULL  ";
+        std::string rightLeft = " NULL  ";
+        std::string rightRight = " NULL  ";
+        if(this->root.get() == nullptr){
+            std::cout << "       " << std::endl;
+            return;
+        }else{
+            root = this->root.get()->ReturnCourse()->courseId;
+            Node* leftNode = this->root.get()->GetLeft();
+            Node* rightNode = this->root.get()->GetRight();
+
+            if(leftNode != nullptr){
+                left = leftNode->ReturnCourse()->courseId;       
+                Node* leftLeftNode = leftNode->GetLeft();
+                Node* leftRightNode = leftNode->GetRight();
+                if(leftLeftNode != nullptr){
+                    leftLeft = leftLeftNode->ReturnCourse()->courseId;
+                }
+                if(leftRightNode != nullptr){
+                    leftRight = leftRightNode->ReturnCourse()->courseId;
+                }
+            }
+            if(rightNode != nullptr){
+                right = rightNode->ReturnCourse()->courseId;
+                Node* rightLeftNode = rightNode->GetLeft();
+                Node* rightRightNode = rightNode->GetRight();
+                if(rightLeftNode != nullptr){
+                    rightLeft = rightLeftNode->ReturnCourse()->courseId;
+                }
+                if(rightRightNode != nullptr){
+                    rightRight = rightRightNode->ReturnCourse()->courseId;
+                }
+            }
+        }
+
+        std::cout << "                    " << root << std::endl;
+        std::cout << "         " << left << "             " << right << std::endl;
+        std::cout << "     " << leftLeft << "  " << leftRight << "   " << rightLeft << "  " << rightRight << std::endl;
+    }
+
+    // Rebalances tree by calling private function ListInOrder with root.
+    // Once ordered vector is built, this clears BST and loads from middle.
+    void BinarySearchTree::RebalanceTree()
+    {
+        // Safety check.
+        if(this->root.get() == nullptr){
+            return;
+        }
+
+        // Built vector in sorted order.
+        std::vector<Course> courses;
+        ListInOrder(this->root.get(), &courses);
+
+        if(courses.empty()){
+            return;
+        }
+
+        this->Clear();
+
+        // Use for loops to reinsert.
+        this->root = std::move(BuildBalancedTree(courses, 0, courses.size()));
+        this->size = courses.size();
+    }
+
+    
+    // Called Recursively to build tree balanced. Similar to
+    // Quicksort algorithm where it partitions vector into chunks until it reaches 
+    // batches of 1. 
+    // Parameters
+    //  courses - ordered vector of courses.
+    //  start  - low end of range to work on.
+    //  end  - high end of range to work on.
+    std::unique_ptr<Node> BinarySearchTree::BuildBalancedTree(const std::vector<Course> &courses, size_t start, size_t end)
+    {
+        if(start >= end || start >= courses.size()){
+            return nullptr;
+        }
+
+        size_t mid = start + (end-start)/2;
+        std::unique_ptr<Node> node = std::make_unique<Node>(courses[mid]);
+        node->SetLeft(BuildBalancedTree(courses, start, mid));
+        node->SetRight(BuildBalancedTree(courses, mid + 1, end));
+
+        return node;
     }
 
     // Clears all nodes in the tree.
@@ -467,10 +574,10 @@ namespace BST {
             return; // Empty tree
         }
         if (this->root->GetLeft() != nullptr) {
-            this->recursiveClear(this->root->GetLeft());
+            this->RecursiveClear(this->root->GetLeft());
         }
         if (this->root->GetRight() != nullptr) {
-            this->recursiveClear(this->root->GetRight());
+            this->RecursiveClear(this->root->GetRight());
         }
         this->root->ResetLeft();
         this->root->ResetRight();
@@ -482,7 +589,7 @@ namespace BST {
     // Parameters:
     //   course - The Course object to validate.
     // Returns: True if the course ID and name are valid and prerequisites exist, false otherwise.
-    bool BinarySearchTree::validateNameDesciption(Course course) {
+    bool BinarySearchTree::ValidateNameDescription(Course course) {
         // Check course ID length (must be exactly 7 characters).
         if (course.courseId.length() != 7) {
             return false;
@@ -497,8 +604,8 @@ namespace BST {
         }
         // Check if all prerequisites exist in the tree.
         std::vector<std::tuple<std::string, std::string>> names;
-        getListOfCourseNames(&names, this->root.get());
-        return checkPrereqsOneCourse(course, names);
+        GetListOfCourseNames(&names, this->root.get());
+        return CheckPrereqsOneCourse(course, names);
     }
 
     // Checks if a course's prerequisites exist in the tree.
@@ -506,12 +613,12 @@ namespace BST {
     //   course - Reference to the Course object to validate.
     //   names  - Reference to a vector of tuples containing course IDs and names.
     // Returns: True if all prerequisites exist, false otherwise.
-    bool BinarySearchTree::checkPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &names) {
+    bool BinarySearchTree::CheckPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &names) {
         for (size_t j = 0; j < course.prereqs.size(); j++) {
             bool found = false;
             for (size_t i = 0; i < names.size(); i++) {
                 auto [x, y] = names.at(i);
-                if (compareNoCase(course.prereqs.at(j), x) == 0) {
+                if (CompareNoCase(course.prereqs.at(j), x) == 0) {
                     found = true;
                     break;
                 }
@@ -527,18 +634,18 @@ namespace BST {
     // Parameters:
     //   course - The Course object to check.
     // Returns: True if the course ID is unique, false if it already exists.
-    bool BinarySearchTree::isCourseIdUnique(Course course) {
+    bool BinarySearchTree::IsCourseIdUnique(Course course) {
         if (this->root == nullptr) {
             return true; // Empty tree, ID is unique.
         }
         std::vector<std::tuple<std::string, std::string>> list;
-        getListOfCourseNames(&list, this->root.get());
+        GetListOfCourseNames(&list, this->root.get());
         if (list.size() < 1) {
             return true; // No courses, ID is unique.
         }
         for (size_t i = 0; i < list.size(); i++) {
             auto [x, y] = list.at(i);
-            if (compareNoCase(x, course.courseId) == 0) {
+            if (CompareNoCase(x, course.courseId) == 0) {
                 return false; // ID already exists
             }
         }
@@ -548,16 +655,17 @@ namespace BST {
     // Recursively clears all nodes in the subtree rooted at the given node.
     // Parameters:
     //   node - Pointer to the current node in the recursive traversal.
-    void BinarySearchTree::recursiveClear(Node *node) {
+    void BinarySearchTree::RecursiveClear(Node *node) {
         if (node->GetLeft() != nullptr) {
-            this->recursiveClear(node->GetLeft());
+            this->RecursiveClear(node->GetLeft());
         }
         if (node->GetRight() != nullptr) {
-            this->recursiveClear(node->GetRight());
+            this->RecursiveClear(node->GetRight());
         }
         node->ResetLeft();
         node->ResetRight();
         this->size--;
     }
+
 
 } // namespace BST
