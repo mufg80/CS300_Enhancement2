@@ -48,14 +48,6 @@ namespace BST {
         // Returns: Raw pointer to the right child node.
         Node* GetRight();
 
-        // Moves ownership of the left child node to the caller.
-        // Returns: Unique pointer to the left child node.
-        std::unique_ptr<Node> MoveLeft();
-
-        // Moves ownership of the right child node to the caller.
-        // Returns: Unique pointer to the right child node.
-        std::unique_ptr<Node> MoveRight();
-
         // Sets the left child node.
         // Parameters:
         //   node - Unique pointer to the new left child node.
@@ -142,13 +134,6 @@ namespace BST {
         //   course - The Course object to check.
         // Returns: True if the course ID is unique, false if it already exists.
         bool IsCourseIdUnique(Course course);
-
-        // Recursively finds courses that would become invalid if a given course is deleted.
-        // Parameters:
-        //   node      - Pointer to the current node in the recursive traversal.
-        //   courseIDs - Pointer to a vector to store IDs of affected courses.
-        //   course    - The Course object to be deleted.
-        void FindCoursesInvalidRecursively(Node* node, std::vector<Course>* coursesList, Course course);
 
         // Recursively clears all nodes in the tree.
         // Parameters:

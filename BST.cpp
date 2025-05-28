@@ -37,18 +37,6 @@ namespace BST {
         return this->rightTree.get();
     }
 
-    // Transfers ownership of the left child node to the caller.
-    // Returns: Unique pointer to the left child node.
-    std::unique_ptr<Node> Node::MoveLeft() {
-        return std::move(this->leftTree);
-    }
-
-    // Transfers ownership of the right child node to the caller.
-    // Returns: Unique pointer to the right child node.
-    std::unique_ptr<Node> Node::MoveRight() {
-        return std::move(this->rightTree);
-    }
-
     // Sets the left child node.
     // Parameters:
     //   node - Unique pointer to the new left child node.
@@ -230,29 +218,6 @@ namespace BST {
         }
         if (node->GetRight() != nullptr) {
             FindCourse(node->GetRight(), id, empty);
-        }
-    }
-
-    // Recursively finds courses that would become invalid due to a course deletion.
-    // Parameters:
-    //   node      - Pointer to the current node in the recursive traversal.
-    //   courseIDs - Pointer to a vector to store affected courses.
-    //   course    - The Course object to be deleted.
-    void BinarySearchTree::FindCoursesInvalidRecursively(Node *node, std::vector<Course> *courseIDs, Course course) {
-        if (node->GetLeft() != nullptr) {
-            this->FindCoursesInvalidRecursively(node->GetLeft(), courseIDs, course);
-        }
-
-        // Check if the current course has the deleted course as a prerequisite.
-        Course *c = node->ReturnCourse();
-        for (size_t i = 0; i < c->prereqs.size(); i++) {
-            if (CompareNoCase(c->prereqs.at(i), course.courseId) == 0) {
-                courseIDs->push_back(*c);
-            }
-        }
-
-        if (node->GetRight() != nullptr) {
-            this->FindCoursesInvalidRecursively(node->GetRight(), courseIDs, course);
         }
     }
 
