@@ -13,11 +13,6 @@
 #include <vector>
 #include "BST.hpp"
 
-
-// Retrieves the file path for the course data file from user input or default settings.
-// Returns: A string containing the file path.
-std::string GetFilePath();
-
 // Prompts the user for an integer input and stores it in the provided reference.
 // Parameters:
 //   input - Reference to an integer where the user's input will be stored.
@@ -26,7 +21,7 @@ void GetUserInt(int &userInput);
 // Builds a Binary Search Tree by reading course data from a file (Case 1).
 // Parameters:
 //   tree - Reference to the BinarySearchTree to populate with course data.
-void BuildStructureFromFile(BST::BinarySearchTree &courseTree);
+void BuildStructureFromFile(std::string &filepath, BST::BinarySearchTree &courseTree);
 
 // Prints the courses in the Binary Search Tree in ordered traversal (Case 2).
 // Parameters:
@@ -55,7 +50,7 @@ void OutputMenuItems();
 //   filepath      - The path to the file containing course data.
 //   dataStructure - Pointer to the BinarySearchTree to store the course data.
 // Returns: True if the file was successfully read and the tree was populated, false otherwise.
-bool ReadCourseFile(std::string filepath, BST::BinarySearchTree* courseTree);
+bool ReadCourseFile(std::string filepath, BST::BinarySearchTree *courseTree);
 
 // Calls function to rebalance BST if not empty.
 // Passes tree to method.

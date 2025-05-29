@@ -15,21 +15,24 @@
 #include <vector>
 #include <memory>
 
-namespace BST {
+namespace BST
+{
 
     // Structure representing a course in the ABCU Course App.
-    struct Course {
-        std::string courseId;      // Unique identifier for the course.
-        std::string courseName;    // Name of the course.
+    struct Course
+    {
+        std::string courseId;             // Unique identifier for the course.
+        std::string courseName;           // Name of the course.
         std::vector<std::string> prereqs; // List of prerequisite course IDs.
     };
 
     // Node class representing a node in the Binary Search Tree, holding a Course object.
-    class Node {
+    class Node
+    {
     private:
-        std::unique_ptr<Node> leftTree;   // Pointer to the left child node.
-        std::unique_ptr<Node> rightTree;  // Pointer to the right child node.
-        Course currentCourse;               // Course data stored in the node.
+        std::unique_ptr<Node> leftTree;  // Pointer to the left child node.
+        std::unique_ptr<Node> rightTree; // Pointer to the right child node.
+        Course currentCourse;            // Course data stored in the node.
 
     public:
         // Constructor: Initializes a node with a given course.
@@ -38,15 +41,15 @@ namespace BST {
         Node(Course course);
 
         // Returns a pointer to the course stored in the node.
-        Course* ReturnCourse();
+        Course *ReturnCourse();
 
         // Gets the left child node.
         // Returns: Raw pointer to the left child node.
-        Node* GetLeft();
+        Node *GetLeft();
 
         // Gets the right child node.
         // Returns: Raw pointer to the right child node.
-        Node* GetRight();
+        Node *GetRight();
 
         // Sets the left child node.
         // Parameters:
@@ -66,16 +69,17 @@ namespace BST {
     };
 
     // Binary Search Tree class for managing courses, sorted by course ID and validated by prerequisites.
-    class BinarySearchTree {
+    class BinarySearchTree
+    {
     private:
-        int size;                     // Number of nodes in the tree.
-        std::unique_ptr<Node> root;   // Root node of the tree.
+        int size;                   // Number of nodes in the tree.
+        std::unique_ptr<Node> root; // Root node of the tree.
 
         // Recursively adds a node with the given course to the tree.
         // Parameters:
         //   node   - Pointer to the current node in the recursive traversal.
         //   course - The Course object to insert.
-        void AddNode(Node* node, Course course);
+        void AddNode(Node *node, Course course);
 
         // Performs case-insensitive string comparison.
         // Parameters:
@@ -87,9 +91,9 @@ namespace BST {
         // Recursively prints courses in-order (sorted by course ID).
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
-        void InOrder(Node* node);
+        void InOrder(Node *node);
 
-        void ListInOrder(Node*node, std::vector<Course>* courses);
+        void ListInOrder(Node *node, std::vector<Course> *courses);
 
         // Prints details of a single course.
         // Parameters:
@@ -101,20 +105,20 @@ namespace BST {
         //   node  - Pointer to the current node in the recursive traversal.
         //   id    - The course ID to search for.
         //   empty - Reference to a Course object to store the found course.
-        void FindCourse(Node* node, std::string courseId, Course& empty);
+        void FindCourse(Node *node, std::string courseId, Course &empty);
 
         // Recursively collects course IDs and names into a list.
         // Parameters:
         //   list - Pointer to a vector of tuples containing course IDs and names.
         //   node - Pointer to the current node in the recursive traversal.
-        void GetListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node* node);
+        void GetListOfCourseNames(std::vector<std::tuple<std::string, std::string>> *list, Node *node);
 
         // Recursively checks prerequisites for all courses.
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
         //   isGood - Pointer to a boolean indicating if all prerequisites are valid.
         //   list - Pointer to a vector of tuples containing course IDs and names.
-        void CheckPrereqsRecursively(Node* node, bool* isGood, std::vector<std::tuple<std::string, std::string>> *list);
+        void CheckPrereqsRecursively(Node *node, bool *isGood, std::vector<std::tuple<std::string, std::string>> *list);
 
         // Validates the name and description of a course.
         // Parameters:
@@ -138,9 +142,9 @@ namespace BST {
         // Recursively clears all nodes in the tree.
         // Parameters:
         //   node - Pointer to the current node in the recursive traversal.
-        void RecursiveClear(Node* node);
+        void RecursiveClear(Node *node);
 
-        std::unique_ptr<Node> BuildBalancedTree(const std::vector<Course>& courses, size_t start, size_t end);
+        std::unique_ptr<Node> BuildBalancedTree(const std::vector<Course> &courses, size_t start, size_t end);
 
     public:
         // Constructor: Initializes an empty Binary Search Tree.
@@ -162,7 +166,7 @@ namespace BST {
         // Parameters:
         //   id    - The course ID to search for.
         //   empty - Reference to a Course object to store the found course.
-        void FindCourse(std::string id, Course& empty);
+        void FindCourse(std::string id, Course &empty);
 
         // Finds courses that would become invalid if a specified course is deleted.
         // Parameters:
