@@ -2,7 +2,6 @@
 // Name        : ABCUApp.hpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
-// Copyright   : None
 // Description : Header file for the ABCU application, containing declarations
 //               for functions to manage a Binary Search Tree (BST) of courses,
 //               handle user input, and process course data from a file.

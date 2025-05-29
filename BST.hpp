@@ -2,7 +2,6 @@
 // Name        : BST.hpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
-// Copyright   : None
 // Description : Header file defining the Binary Search Tree (BST) and related
 //               structures for the ABCU Course App. Contains declarations for
 //               Course structure, Node class, and BinarySearchTree class to manage
@@ -78,12 +77,12 @@ namespace BST
         // Recursively gets the height of the binary search tree. Used for rebalancing logic.
         // Parameters:
         //   node   - Pointer to the current node in the recursive traversal.
-        // Returns int (height of tree).
+        //   Returns int (height of tree).
         int GetHeight(Node* node);
 
         // Runs algorithm to decide whether a rebalancing is due. Checks the height of
         // tree against the log of the size * 2.
-        // Returns bool (to rebalance if true).
+        //   Returns bool (to rebalance if true).
         bool IsImbalanced();
 
 
@@ -97,7 +96,7 @@ namespace BST
         // Parameters:
         //   first  - First string to compare.
         //   second - Second string to compare.
-        // Returns: Integer indicating comparison result (<0 if first < second, 0 if equal, >0 if first > second).
+        //   Returns: Integer indicating comparison result (<0 if first < second, 0 if equal, >0 if first > second).
         int CompareNoCase(std::string first, std::string second);
 
         // Recursively prints courses in-order (sorted by course ID).
@@ -146,20 +145,20 @@ namespace BST
         // Validates the name and description of a course.
         // Parameters:
         //   course - The Course object to validate.
-        // Returns: True if the course name and description are valid, false otherwise.
+        //   Returns: True if the course name and description are valid, false otherwise.
         bool ValidateNameDescription(Course course);
 
         // Checks if a course's prerequisites exist in the tree.
         // Parameters:
         //   course - Reference to the Course object to validate.
         //   names  - Reference to a vector of tuples containing course IDs and names.
-        // Returns: True if all prerequisites exist, false otherwise.
+        //   Returns: True if all prerequisites exist, false otherwise.
         bool CheckPrereqsOneCourse(BST::Course &course, std::vector<std::tuple<std::string, std::string>> &list);
 
         // Checks if a course ID is unique in the tree.
         // Parameters:
         //   course - The Course object to check.
-        // Returns: True if the course ID is unique, false if it already exists.
+        //   Returns: True if the course ID is unique, false if it already exists.
         bool IsCourseIdUnique(Course course);
 
         // Recursively clears all nodes in the tree.
@@ -169,8 +168,8 @@ namespace BST
 
         // Rebalances tree by copying to a vector and then clearing tree. So that
         // it can be rebuilt from scratch.
-        // Parameters: None
-        // Returns: void
+        //   Parameters: None
+        //   Returns: void
         void RebalanceTree();
 
         // Recursive helper method for RebalanceTree is called to build up after old tree is cleared.
@@ -186,7 +185,7 @@ namespace BST
         // Inserts a new course into the tree.
         // Parameters:
         //   course - The Course object to insert.
-        // Returns: True if insertion is successful, false otherwise.
+        //   Returns: True if insertion is successful, false otherwise.
         bool Insert(Course course);
 
         // Prints all courses in the tree in sorted order.

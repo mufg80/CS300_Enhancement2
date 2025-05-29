@@ -2,7 +2,6 @@
 // Name        : BST.cpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
-// Copyright   : None
 // Description : Implementation file for the Binary Search Tree (BST) used in the
 //               ABCU Course App. Defines methods for the Node and BinarySearchTree
 //               classes to manage course data, including insertion, deletion,

@@ -2,7 +2,6 @@
 // Name        : ABCUApp.cpp
 // Author      : Shannon Musgrave
 // Version     : 1.0
-// Copyright   : None
 // Description : Implementation file for the ABCU Course App, providing functionality
 //               to manage a Binary Search Tree (BST) of courses, including loading,
 //               printing and adding courses, as well as handling user input.
@@ -191,7 +190,7 @@ void OutputMenuItems()
     std::cout << "-----------------------------------------------------------" << std::endl;
     std::cout << std::endl;
     std::cout << "                    Menu Options                 " << std::endl;
-    std::cout << "               1) Load Data Structure            " << std::endl;
+    std::cout << "               1) Load Next 100 Courses to Memory" << std::endl;
     std::cout << "               2) Print Course List              " << std::endl;
     std::cout << "               3) Print Course                   " << std::endl;
     std::cout << "               4) Exit                           " << std::endl;
