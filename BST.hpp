@@ -75,6 +75,18 @@ namespace BST
         int size;                   // Number of nodes in the tree.
         std::unique_ptr<Node> root; // Root node of the tree.
 
+        // Recursively gets the height of the binary search tree. Used for rebalancing logic.
+        // Parameters:
+        //   node   - Pointer to the current node in the recursive traversal.
+        // Returns int (height of tree).
+        int GetHeight(Node* node);
+
+        // Runs algorithm to decide whether a rebalancing is due. Checks the height of
+        // tree against the log of the size * 2.
+        // Returns bool (to rebalance if true).
+        bool IsImbalanced();
+
+
         // Recursively adds a node with the given course to the tree.
         // Parameters:
         //   node   - Pointer to the current node in the recursive traversal.
@@ -95,17 +107,28 @@ namespace BST
 
         void ListInOrder(Node *node, std::vector<Course> *courses);
 
-        // Prints details of a single course.
+        // Prints details of a single course including prerequisites.
         // Parameters:
         //   course - The Course object to print.
         void PrintCourse(Course course);
+
+        // Prints only name and description of course.
+        // Parameters:
+        //   course - The Course object to print.
+        void PrintIdDescription(Course course);
+
+        // Searches for a course by ID and stores it in the provided reference.
+        // Parameters:
+        //   id    - The course ID to search for.
+        //   empty - Reference to a Course object to store the found course.
+        void FindCourse(std::string id, Course &empty);
 
         // Recursively searches for a course by ID and stores it in the provided reference.
         // Parameters:
         //   node  - Pointer to the current node in the recursive traversal.
         //   id    - The course ID to search for.
         //   empty - Reference to a Course object to store the found course.
-        void FindCourse(Node *node, std::string courseId, Course &empty);
+        void FindCourseRecursively(Node *node, std::string courseId, Course &empty);
 
         // Recursively collects course IDs and names into a list.
         // Parameters:
@@ -144,6 +167,13 @@ namespace BST
         //   node - Pointer to the current node in the recursive traversal.
         void RecursiveClear(Node *node);
 
+        // Rebalances tree by copying to a vector and then clearing tree. So that
+        // it can be rebuilt from scratch.
+        // Parameters: None
+        // Returns: void
+        void RebalanceTree();
+
+        // Recursive helper method for RebalanceTree is called to build up after old tree is cleared.
         std::unique_ptr<Node> BuildBalancedTree(const std::vector<Course> &courses, size_t start, size_t end);
 
     public:
@@ -160,19 +190,7 @@ namespace BST
         bool Insert(Course course);
 
         // Prints all courses in the tree in sorted order.
-        void PrintOrdered();
-
-        // Searches for a course by ID and stores it in the provided reference.
-        // Parameters:
-        //   id    - The course ID to search for.
-        //   empty - Reference to a Course object to store the found course.
-        void FindCourse(std::string id, Course &empty);
-
-        // Finds courses that would become invalid if a specified course is deleted.
-        // Parameters:
-        //   coursetodelete - The ID of the course to be deleted.
-        // Returns: A vector of course IDs that would be affected by the deletion.
-        std::vector<std::string> FindCoursesInvalidOnDelete(std::string courseToDelete);
+        void PrintOrdered();        
 
         // Validates all courses in the tree, ensuring valid prerequisites.
         // Returns: True if all courses are valid, false otherwise.
@@ -181,30 +199,7 @@ namespace BST
         // Prints details of a single course by ID.
         // Parameters:
         //   id - The course ID to print.
-        void PrintOneCourse(std::string courseId);
-
-        // Removes a course from the tree by ID.
-        // Parameters:
-        //   id - The course ID to remove.
-        // Returns: True if the course was removed, false if not found.
-        bool RemoveCourseWithId(std::string courseId);
-
-        // Validates a single course, checking its ID, name, and prerequisites.
-        // Parameters:
-        //   course - The Course object to validate.
-        // Returns: True if the course is valid, false otherwise.
-        bool ValidateSingleCourse(Course course);
-
-        // Prints 3 levels of tree for informational purposes.
-        // Parameters: None
-        // Returns: None
-        void PrintTopThreeLevelsOfTree();
-
-        // Rebalances tree by copying to a vector and then clearing tree. So that
-        // it can be rebuilt from scratch.
-        // Parameters: None
-        // Returns: void
-        void RebalanceTree();
+        void PrintSingleCourse(std::string courseId);
 
         // Clears all courses from the tree.
         void Clear();

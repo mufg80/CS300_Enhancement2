@@ -5,7 +5,7 @@
 // Copyright   : None
 // Description : Implementation file for the ABCU Course App, providing functionality
 //               to manage a Binary Search Tree (BST) of courses, including loading,
-//               printing, deleting, and adding courses, as well as handling user input.
+//               printing and adding courses, as well as handling user input.
 //               Developed as part of the CS499 Capstone project.
 //============================================================================
 
@@ -20,6 +20,7 @@
 #include <limits>
 #include <algorithm>
 #include <filesystem>
+
 
 // Using BST namespace for BinarySearchTree and Course classes.
 using namespace BST;
@@ -59,12 +60,6 @@ int main(int argc, char *argv[])
             PrintOneCourse(tree); // Print details of a specific course.
             break;
         case 4:
-            Rebalance(tree);
-            break;
-        case 5:
-            PrintThreeTiers(tree);
-            break;
-        case 6:
             // Exit option: Display goodbye message and exit loop.
             std::cout << "            Good bye!" << std::endl;
             break;
@@ -73,7 +68,7 @@ int main(int argc, char *argv[])
             std::cout << "            This is not an appropriate entry. Please try again." << std::endl;
             break;
         }
-        if (input == 6)
+        if (input == 4)
         {
             break; // Terminate loop when user selects exit.
         }
@@ -145,7 +140,7 @@ void PrintOneCourse(BST::BinarySearchTree &tree)
 
     // Prompt user for course ID and print course details.
     GetUserString(message, &userinput);
-    tree.PrintOneCourse(userinput);
+    tree.PrintSingleCourse(userinput);
 }
 
 // Prompts the user for a string input and stores it in the provided pointer.
@@ -199,9 +194,7 @@ void OutputMenuItems()
     std::cout << "               1) Load Data Structure            " << std::endl;
     std::cout << "               2) Print Course List              " << std::endl;
     std::cout << "               3) Print Course                   " << std::endl;
-    std::cout << "               4) Rebalance Tree                   " << std::endl;
-    std::cout << "               5) Print Tiers                   " << std::endl;
-    std::cout << "               6) Exit                           " << std::endl;
+    std::cout << "               4) Exit                           " << std::endl;
     std::cout << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
     std::cout << "-----------------------------------------------------------" << std::endl;
@@ -291,36 +284,4 @@ bool ReadCourseFile(std::string filePath, BinarySearchTree *tree)
     // Validate all courses in the tree.
     bool valid = tree->ValidateCourses();
     return valid;
-}
-
-// Calls function to rebalance BST if it is not empty.
-// Parameters:
-//   tree          - Pointer to the BinarySearchTree to store the course data.
-// Returns: None
-void Rebalance(BST::BinarySearchTree &courseTree)
-{
-    if (courseTree.GetSize() == 0)
-    {
-        std::cout << "        Tree Empty." << std::endl;
-        return;
-    }
-    courseTree.RebalanceTree();
-}
-
-// Calls function to print 3 levels of tree if tree is not empty.
-// Parameters:
-//   tree          - Pointer to the BinarySearchTree to store the course data.
-// Returns: None
-void PrintThreeTiers(BST::BinarySearchTree &courseTree)
-{
-    if (courseTree.GetSize() == 0)
-    {
-        std::cout << "        Tree Empty." << std::endl;
-        return;
-    }
-    std::cout << "" << std::endl;
-    std::cout << "Tree Displayed to first 3 tiers: " << std::endl;
-    std::cout << "" << std::endl;
-    courseTree.PrintTopThreeLevelsOfTree();
-    std::cout << "" << std::endl;
 }

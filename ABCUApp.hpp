@@ -51,11 +51,3 @@ void OutputMenuItems();
 //   dataStructure - Pointer to the BinarySearchTree to store the course data.
 // Returns: True if the file was successfully read and the tree was populated, false otherwise.
 bool ReadCourseFile(std::string filepath, BST::BinarySearchTree *courseTree);
-
-// Calls function to rebalance BST if not empty.
-// Passes tree to method.
-void Rebalance(BST::BinarySearchTree &courseTree);
-
-// Calls function to print visually 3 tiers of tree.
-// Passes tree to method.
-void PrintThreeTiers(BST::BinarySearchTree &courseTree);

@@ -1,11 +1,11 @@
-MATH001,Math 1
-MATH002,Math 2
+MATH001,Math 1,
+MATH002,Math 2,
 MATH005,Math 5,
 MATH010,Math 10,
-PHYS001,Physics 1
+PHYS001,Physics 1,
 PHYS002,Physics 2,
 PHYS010,Physics 10,
-CHEM001,Chemistry 1
+CHEM001,Chemistry 1,
 CHEM002,Chemistry 2,
 CHEM010,Chemistry 10,
 BIOL001,Biology 1,

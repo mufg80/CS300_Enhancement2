@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 namespace BST
 {
@@ -125,6 +126,13 @@ namespace BST
         // Otherwise, recursively add the node.
         int oldSize = this->size;
         this->AddNode(this->root.get(), course);
+
+        // Rebalancing logic 
+        // Tree of sufficient size, once in 100 insertions, and is imbalanced.
+        bool isModded = this->size % 100 == 0;
+        if(this->size > 500 && isModded && IsImbalanced()){
+            this->RebalanceTree();
+        }
         return this->size > oldSize; // Return true if size increased.
     }
 
@@ -184,7 +192,7 @@ namespace BST
         {
             this->InOrder(node->GetLeft());
         }
-        this->PrintCourse(*node->ReturnCourse());
+        this->PrintIdDescription(*node->ReturnCourse());
         if (node->GetRight() != nullptr)
         {
             this->InOrder(node->GetRight());
@@ -230,6 +238,16 @@ namespace BST
         std::cout << "------------------------------------------" << std::endl;
     }
 
+     // Prints details of a single course, including ID, name, and prerequisites.
+    // Parameters:
+    //   course - The Course object to print.
+    void BinarySearchTree::PrintIdDescription(Course course)
+    {
+        std::cout << "------------------------------------------" << std::endl;
+        std::cout << "Course: " << course.courseId << "   Description: " << course.courseName << std::endl;
+        std::cout << "------------------------------------------" << std::endl;
+    }
+
     // Searches for a course by ID and stores it in the provided reference.
     // Parameters:
     //   id    - The course ID to search for.
@@ -238,7 +256,7 @@ namespace BST
     {
         if (this->root != nullptr)
         {
-            FindCourse(this->root.get(), id, empty);
+            FindCourseRecursively(this->root.get(), id, empty);
         }
     }
 
@@ -247,7 +265,7 @@ namespace BST
     //   node  - Pointer to the current node in the recursive traversal.
     //   id    - The course ID to search for.
     //   empty - Reference to a Course object to store the found course.
-    void BinarySearchTree::FindCourse(Node *node, std::string id, Course &empty)
+    void BinarySearchTree::FindCourseRecursively(Node *node, std::string id, Course &empty)
     {
         if (CompareNoCase(node->ReturnCourse()->courseId, id) == 0)
         {
@@ -255,11 +273,11 @@ namespace BST
         }
         if (node->GetLeft() != nullptr)
         {
-            FindCourse(node->GetLeft(), id, empty);
+            FindCourseRecursively(node->GetLeft(), id, empty);
         }
         if (node->GetRight() != nullptr)
         {
-            FindCourse(node->GetRight(), id, empty);
+            FindCourseRecursively(node->GetRight(), id, empty);
         }
     }
 
@@ -330,7 +348,7 @@ namespace BST
     // Prints details of a single course by ID.
     // Parameters:
     //   id - The course ID to print.
-    void BinarySearchTree::PrintOneCourse(std::string id)
+    void BinarySearchTree::PrintSingleCourse(std::string id)
     {
         Course course;
         this->FindCourse(id, course);
@@ -342,62 +360,6 @@ namespace BST
         {
             std::cout << "Course not found." << std::endl;
         }
-    }
-
-    // Prints top 3 tiers of tree for visualization of BST's balance.
-    void BinarySearchTree::PrintTopThreeLevelsOfTree()
-    {
-        std::string root = " NULL  ";
-        std::string left = " NULL  ";
-        std::string right = " NULL  ";
-        std::string leftLeft = " NULL  ";
-        std::string leftRight = " NULL  ";
-        std::string rightLeft = " NULL  ";
-        std::string rightRight = " NULL  ";
-        if (this->root.get() == nullptr)
-        {
-            std::cout << "       " << std::endl;
-            return;
-        }
-        else
-        {
-            root = this->root.get()->ReturnCourse()->courseId;
-            Node *leftNode = this->root.get()->GetLeft();
-            Node *rightNode = this->root.get()->GetRight();
-
-            if (leftNode != nullptr)
-            {
-                left = leftNode->ReturnCourse()->courseId;
-                Node *leftLeftNode = leftNode->GetLeft();
-                Node *leftRightNode = leftNode->GetRight();
-                if (leftLeftNode != nullptr)
-                {
-                    leftLeft = leftLeftNode->ReturnCourse()->courseId;
-                }
-                if (leftRightNode != nullptr)
-                {
-                    leftRight = leftRightNode->ReturnCourse()->courseId;
-                }
-            }
-            if (rightNode != nullptr)
-            {
-                right = rightNode->ReturnCourse()->courseId;
-                Node *rightLeftNode = rightNode->GetLeft();
-                Node *rightRightNode = rightNode->GetRight();
-                if (rightLeftNode != nullptr)
-                {
-                    rightLeft = rightLeftNode->ReturnCourse()->courseId;
-                }
-                if (rightRightNode != nullptr)
-                {
-                    rightRight = rightRightNode->ReturnCourse()->courseId;
-                }
-            }
-        }
-
-        std::cout << "                    " << root << std::endl;
-        std::cout << "         " << left << "             " << right << std::endl;
-        std::cout << "     " << leftLeft << "  " << leftRight << "   " << rightLeft << "  " << rightRight << std::endl;
     }
 
     // Rebalances tree by calling private function ListInOrder with root.
@@ -567,5 +529,24 @@ namespace BST
         node->ResetRight();
         this->size--;
     }
+
+    // Recursively gets the height of the binary search tree. Used for rebalancing logic.
+    // Parameters:
+    //   node   - Pointer to the current node in the recursive traversal.
+    // Returns int (height of tree).
+    int BinarySearchTree::GetHeight(Node* node) {
+    if (!node) return 0;
+        return 1 + std::max(GetHeight(node->GetLeft()), GetHeight(node->GetRight()));
+    }
+
+    // Runs algorithm to decide whether a rebalancing is due. Checks the height of
+    // tree against the log of the size * 2.
+    // Returns bool (to rebalance if true).
+    bool BinarySearchTree::IsImbalanced() {
+        int height = GetHeight(root.get());
+        int n = this->size;
+        int logTimesTwo = (std::ceil(std::log2(n)) * 2);
+    return height > logTimesTwo;
+}
 
 } // namespace BST
