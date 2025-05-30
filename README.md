@@ -62,8 +62,9 @@ Print Single Course: Retrieves and displays details of a specific course, includ
 Code Example
 
 Example A: Load Courses from File
-The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. Exampe cpp```
+The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. 
 
+``` cpp
 void BuildStructureFromFile(std::string &filePath, BST::BinarySearchTree &tree)
 {
     if (filePath.size() < 1 || !std::filesystem::exists(filePath))
@@ -95,12 +96,14 @@ void BuildStructureFromFile(std::string &filePath, BST::BinarySearchTree &tree)
         tree.Clear(); // Clear tree on failure to maintain consistency.
     }
 }
+```
 
 This reads from a file (e.g., CourseList.txt), parses each line into a Course object, and inserts it into the BST if the course ID is unique and prerequisites are valid and name and id are within appropriate lengths.
 
 Example B: Print All Courses
-The PrintCoursesInOrder function performs an in-order traversal of the BST to display all courses. Example C++:
+The PrintCoursesInOrder function performs an in-order traversal of the BST to display all courses. 
 
+```cpp
 void PrintCoursesInOrder(BST::BinarySearchTree &tree)
 {
     if (tree.GetSize() == 0)
@@ -115,12 +118,14 @@ void PrintCoursesInOrder(BST::BinarySearchTree &tree)
         std::cout << "" << std::endl;
     }
 }
+```
 
 Checks size of tree and proceeds to print message or courses.
 
 Example C: Print a Single Course  
 The `PrintOneCourse` function prompts the user for a course ID and displays its details.
 
+```cpp
 void PrintOneCourse(BST::BinarySearchTree &tree)
 {
     std::string message = "Which course (by ID) would you like to know about?";
@@ -130,6 +135,7 @@ void PrintOneCourse(BST::BinarySearchTree &tree)
     GetUserString(message, &userinput);
     tree.PrintSingleCourse(userinput);
 }
+```
 
 Contact
 Shannon Musgrave
