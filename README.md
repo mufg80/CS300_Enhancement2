@@ -36,6 +36,7 @@ Print details of a specific course by entering its ID (Option 3).
 Exit the program (Option 4).
 
 Installation
+
 To set up the environment:
 Install a C++ compiler by following the instructions at GCC Installation.
 
