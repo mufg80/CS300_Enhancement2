@@ -62,11 +62,10 @@ Print Single Course: Retrieves and displays details of a specific course, includ
 Code Example
 
 Example A: Load Courses from File
-The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. Exampe C++:
+The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. Exampe cpp```
 
 void BuildStructureFromFile(std::string &filePath, BST::BinarySearchTree &tree)
 {
-
     if (filePath.size() < 1 || !std::filesystem::exists(filePath))
     {
         std::string message = "            Enter the file name for the courses list (no extension).";
