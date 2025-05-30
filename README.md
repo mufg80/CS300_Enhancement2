@@ -51,13 +51,17 @@ Print Single Course: Retrieves and displays details of a specific course, includ
 Code Example
 Example A: Load Courses from File
 The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. 
+
 ![alt text](Images/case1.png)
 
 This reads from a file (e.g., CourseList.txt), parses each line into a Course object, and inserts it into the BST if the course ID is unique and prerequisites are valid and name and id are within appropriate lengths.
 
 Example B: Print All Courses
 The PrintCoursesInOrder function performs an in-order traversal of the BST to display all courses. 
+
 ![alt text](Images/case2.png)
+
+Also notes number of courses in memory.
 
 ![alt text](Images/case2a.png)
 
