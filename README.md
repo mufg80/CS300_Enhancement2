@@ -139,6 +139,8 @@ void PrintOneCourse(BST::BinarySearchTree &tree)
 }
 ```
 
-Contact
+## Contact
+
 Shannon Musgrave
+
 shannon.musgrave@snhu.edu (mailto:shannon.musgrave@snhu.edu)
