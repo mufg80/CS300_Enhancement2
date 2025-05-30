@@ -6,7 +6,7 @@ ABCU Course App is a C++ application designed to manage a Binary Search Tree (BS
 Motivation
 Managing course data, including prerequisites, is critical for academic advisors and students at ABCU. Manually verifying course details and prerequisites is time-consuming and error-prone. This application automates the process by organizing courses in a BST, enabling fast retrieval and validation of course information, thus saving time and ensuring data integrity.
 
-Getting Started
+# Getting Started
 To get started, follow the steps below:
 Ensure a C++ compiler is installed (see Installation).
 
@@ -35,7 +35,7 @@ Print details of a specific course by entering its ID (Option 3).
 
 Exit the program (Option 4).
 
-Installation
+# Installation
 
 To set up the environment:
 Install a C++ compiler by following the instructions at GCC Installation.
@@ -51,7 +51,8 @@ g++ ABCUApp.cpp BST.cpp -o ABCUCourseApp
 
 Ensure the course data file (CourseList.txt) is in the same directory as the executable. The file should be a comma-separated text file with each line containing a course ID, course name, and optional prerequisite IDs.
 
-Usage
+# Usage
+
 The ABCU Course App supports three primary use cases:
 Load Courses: Reads up to 100 courses from a specified text file into a BST, validating course IDs, names, and prerequisites. IMPORTANT - all prerequsites must exist as a courseID in first column or it is invalid and the file is not read.
 
@@ -59,9 +60,9 @@ Print All Courses: Displays all courses in the BST in alphabetical order by cour
 
 Print Single Course: Retrieves and displays details of a specific course, including its ID, name, and prerequisites, based on a user-provided course ID.
 
-Code Example
+# Code Example
 
-Example A: Load Courses from File
+## Example A: Load Courses from File
 The BuildStructureFromFile function prompts the user for a file name (without extension), appends .txt, and loads course data into the BST. 
 
 ``` cpp
@@ -100,7 +101,7 @@ void BuildStructureFromFile(std::string &filePath, BST::BinarySearchTree &tree)
 
 This reads from a file (e.g., CourseList.txt), parses each line into a Course object, and inserts it into the BST if the course ID is unique and prerequisites are valid and name and id are within appropriate lengths.
 
-Example B: Print All Courses
+## Example B: Print All Courses
 The PrintCoursesInOrder function performs an in-order traversal of the BST to display all courses. 
 
 ```cpp
@@ -122,7 +123,8 @@ void PrintCoursesInOrder(BST::BinarySearchTree &tree)
 
 Checks size of tree and proceeds to print message or courses.
 
-Example C: Print a Single Course  
+## Example C: Print a Single Course  
+
 The `PrintOneCourse` function prompts the user for a course ID and displays its details.
 
 ```cpp
